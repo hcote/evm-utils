@@ -3,6 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --color-bg: #121212;
+  --color-surface: #232323;
+  --color-text-primary: #E5E5E5;
+  --color-text-secondary: #9CA3AF;
+  --color-accent: #6EE7B7;
+}
+
+html.dark {
+  --color-bg: #121212;
+  --color-surface: #232323;
+  --color-text-primary: #E5E5E5;
+  --color-text-secondary: #9CA3AF;
+  --color-accent: #6EE7B7;
 }
 
 @theme inline {

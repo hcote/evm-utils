@@ -9,10 +9,9 @@ export default function TopNav() {
   return (
     <nav
       className="w-full flex items-center justify-between p-5"
-      // style={{
-      //   backgroundColor: "var(--color-surface)",
-      //   color: "var(--color-text-primary)",
-      // }}
+      style={{
+        backgroundColor: "var(--color-bg)",
+      }}
     >
       <Header />
       <div className="flex items-center gap-8">

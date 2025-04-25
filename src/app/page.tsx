@@ -14,7 +14,6 @@ export default function Page() {
     <div
       className="py-12 px-6"
       style={{
-        backgroundColor: "var(--color-bg)",
         color: "var(--color-text-primary)",
       }}
     >

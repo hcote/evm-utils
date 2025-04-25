@@ -23,7 +23,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-8">
+    <div className="text-white p-8">
       <h1 className="text-2xl font-bold mb-6">Raw Transaction Decoder</h1>
 
       <div className="flex flex-col gap-4 max-w-xl">

@@ -19,11 +19,7 @@ const sanitizeInput = (value: string): string => {
 export default function Page(): JSX.Element {
   const { data: priceUSD } = useEthPrice();
   const { control, getValues, setValue } = useForm<FormValues>({
-    defaultValues: {
-      wei: "",
-      gwei: "",
-      eth: "",
-    },
+    defaultValues: { wei: "", gwei: "", eth: "" },
   });
 
   const values = useWatch({ control });
@@ -31,8 +27,8 @@ export default function Page(): JSX.Element {
 
   const handleUpdate = (field: keyof FormValues, input: string) => {
     lastChangedField.current = field;
-
     const sanitized = sanitizeInput(input);
+
     if (!sanitized) {
       setValue("wei", "");
       setValue("gwei", "");
@@ -43,10 +39,8 @@ export default function Page(): JSX.Element {
     try {
       let wei: bigint;
 
-      // Use parseUnits properly with decimal strings
       if (field === "wei") {
-        // Only whole numbers allowed here
-        wei = BigInt(sanitized.replace(/\..*$/, "")); // Remove decimal part if present
+        wei = BigInt(sanitized.replace(/\..*$/, ""));
       } else if (field === "gwei") {
         wei = parseUnits(sanitized, 9);
       } else {
@@ -59,14 +53,12 @@ export default function Page(): JSX.Element {
         if (current !== newValue)
           setValue("wei", newValue, { shouldDirty: false });
       }
-
       if (field !== "gwei") {
         const current = getValues("gwei");
         const newValue = formatUnits(wei, 9);
         if (current !== newValue)
           setValue("gwei", newValue, { shouldDirty: false });
       }
-
       if (field !== "eth") {
         const current = getValues("eth");
         const newValue = formatUnits(wei, 18);
@@ -79,14 +71,12 @@ export default function Page(): JSX.Element {
   };
 
   return (
-    <div className="p-4 space-y-4 bg-gray-900 text-white max-w-md mx-auto rounded-xl shadow">
-      <h2 className="text-xl font-semibold text-center">ETH Unit Converter</h2>
-
+    <div className="p-6 space-y-5 bg-[var(--color-bg)] text-[var(--color-text-primary)] max-w-md mx-auto rounded-2xl shadow-lg border border-[var(--color-surface)]">
       {(["wei", "gwei", "eth"] as const).map((field) => (
-        <div className="space-y-1" key={field}>
+        <div className="space-y-2" key={field}>
           <label
             htmlFor={field}
-            className={`block capitalize h-5 ${
+            className={`block capitalize text-sm transition-opacity duration-200 ${
               values[field] ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
           >
@@ -101,7 +91,7 @@ export default function Page(): JSX.Element {
                 id={field}
                 inputMode="decimal"
                 placeholder={field}
-                className="w-full px-3 py-2 bg-gray-800 rounded border border-gray-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg bg-[var(--color-surface)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                 onChange={(e) => {
                   const val = e.target.value;
                   controllerField.onChange(val);
@@ -112,8 +102,8 @@ export default function Page(): JSX.Element {
           />
         </div>
       ))}
-      <div>
-        <p className="text-sm text-gray-400">
+      <div className="pt-2">
+        <p className="text-sm text-[var(--color-text-secondary)]">
           ≈{" "}
           {values.eth && priceUSD
             ? `$${formatUSD(

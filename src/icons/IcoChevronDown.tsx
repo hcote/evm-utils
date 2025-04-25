@@ -1,10 +1,12 @@
-interface IcoUnitsProps {
+import React from "react";
+
+interface IcoChevronDownProps {
   color?: string;
   size?: number;
   className?: string;
 }
 
-const IcoUnits: React.FC<IcoUnitsProps> = ({
+const IcoChevronDown: React.FC<IcoChevronDownProps> = ({
   color = "currentColor",
   size = 24,
   className = "",
@@ -19,13 +21,10 @@ const IcoUnits: React.FC<IcoUnitsProps> = ({
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={`lucide lucide-repeat-icon ${className}`}
+    className={`lucide lucide-chevron-down-icon ${className}`}
   >
-    <path d="m17 2 4 4-4 4" />
-    <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
-    <path d="m7 22-4-4 4-4" />
-    <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+    <path d="m6 9 6 6 6-6" />
   </svg>
 );
 
-export default IcoUnits;
+export default IcoChevronDown;

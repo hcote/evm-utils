@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, JSX } from "react";
 import {
   generatePrivateKey,
   privateKeyToAccount,
@@ -16,16 +16,28 @@ export default function Page() {
   const [suffix, setSuffix] = useState("");
   const [useSeedPhrase, setUseSeedPhrase] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [contains, setContains] = useState("");
   const abortRef = useRef({ abort: false });
   const [generatedType, setGeneratedType] = useState<
     "mnemonic" | "privateKey" | null
   >(null);
+  const [generatedHighlight, setGeneratedHighlight] = useState({
+    prefix: "",
+    suffix: "",
+    contains: "",
+  });
 
-  const matchesVanity = (address: string, prefix: string, suffix: string) => {
+  const matchesVanity = (
+    address: string,
+    prefix: string,
+    suffix: string,
+    contains: string
+  ) => {
     const lower = address.toLowerCase();
     return (
-      (prefix ? lower.startsWith(`0x${prefix.toLowerCase()}`) : true) &&
-      (suffix ? lower.endsWith(suffix.toLowerCase()) : true)
+      (!prefix || lower.startsWith(`0x${prefix.toLowerCase()}`)) &&
+      (!suffix || lower.endsWith(suffix.toLowerCase())) &&
+      (!contains || lower.includes(contains.toLowerCase()))
     );
   };
 
@@ -35,36 +47,34 @@ export default function Page() {
     setMnemonic(null);
     setAddress(null);
     abortRef.current.abort = false;
-
     const startTime = Date.now();
 
-    // Use setTimeout to allow the UI to update before starting the search
     setTimeout(async () => {
-      const batchSize = 100; // Process this many addresses before yielding to UI
-
+      const batchSize = 100;
       while (Date.now() - startTime < timeoutMs) {
         if (abortRef.current.abort) break;
-
-        // Process a batch of addresses
         let createdMatch = false;
+
         for (let i = 0; i < batchSize; i++) {
           if (useSeedPhrase) {
             const m = await bip39.generateMnemonic();
             const account = await mnemonicToAccount(m);
-            if (matchesVanity(account.address, prefix, suffix)) {
+            if (matchesVanity(account.address, prefix, suffix, contains)) {
               setMnemonic(m);
               setAddress(account.address);
               setGeneratedType("mnemonic");
+              setGeneratedHighlight({ prefix, suffix, contains });
               createdMatch = true;
               break;
             }
           } else {
             const pk = generatePrivateKey();
             const account = privateKeyToAccount(pk);
-            if (matchesVanity(account.address, prefix, suffix)) {
+            if (matchesVanity(account.address, prefix, suffix, contains)) {
               setPrivateKey(pk);
               setAddress(account.address);
               setGeneratedType("privateKey");
+              setGeneratedHighlight({ prefix, suffix, contains });
               createdMatch = true;
               break;
             }
@@ -76,80 +86,134 @@ export default function Page() {
           return;
         }
 
-        // Yield control back to the UI thread
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((res) => setTimeout(res, 0));
       }
 
       setLoading(false);
       if (!abortRef.current.abort) alert("No match created within time limit.");
-    }, 100); // Small delay to ensure the loading state is rendered
+    }, 100);
   };
 
-  const handlePrefixChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9a-fA-F]/g, "");
-    setPrefix(value);
-  };
+  const highlightAddressParts = (
+    address: string,
+    prefix: string,
+    suffix: string,
+    contains: string
+  ): JSX.Element => {
+    const lower = address.toLowerCase();
+    const p = prefix.toLowerCase();
+    const s = suffix.toLowerCase();
+    const c = contains.toLowerCase();
 
-  const handleSuffixChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9a-fA-F]/g, "");
-    setSuffix(value);
-  };
+    const matches = [];
+    let i = 0;
 
-  const handleGenerate = () => {
-    abortRef.current.abort = true;
-    setTimeout(() => generateVanityAddress(), 50);
+    if (p && lower.startsWith(`0x${p}`)) {
+      matches.push(
+        <span key="prefix" className="text-[var(--color-accent)] font-semibold">
+          {address.slice(0, 2 + p.length)}
+        </span>
+      );
+      i = 2 + p.length;
+    }
+
+    const containsIndex = c ? lower.indexOf(c, i) : -1;
+    if (containsIndex !== -1 && containsIndex >= i) {
+      if (containsIndex > i) {
+        matches.push(
+          <span key="pre-contains">{address.slice(i, containsIndex)}</span>
+        );
+      }
+      matches.push(
+        <span key="contains" className="text-yellow-400 font-semibold">
+          {address.slice(containsIndex, containsIndex + c.length)}
+        </span>
+      );
+      i = containsIndex + c.length;
+    }
+
+    const suffixIndex = s ? lower.length - s.length : lower.length;
+    if (i < suffixIndex) {
+      matches.push(<span key="mid">{address.slice(i, suffixIndex)}</span>);
+      i = suffixIndex;
+    }
+
+    if (s && lower.endsWith(s)) {
+      matches.push(
+        <span key="suffix" className="text-green-400 font-semibold">
+          {address.slice(-s.length)}
+        </span>
+      );
+    }
+
+    return <>{matches}</>;
   };
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-4">Wallet Generator</h1>
-      <div className="flex gap-4 mb-4">
+      <div className="flex flex-col gap-4 mb-6">
         <input
           type="text"
-          placeholder="Starts with (e.g. 0000)"
-          className="bg-gray-900 text-white px-4 py-2 rounded-xl"
+          placeholder="Starts with"
           value={prefix}
-          onChange={handlePrefixChange}
+          onChange={(e) =>
+            setPrefix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+          }
+          className="bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-lg placeholder-[var(--color-text-secondary)] focus:outline-none"
         />
         <input
           type="text"
-          placeholder="Ends with (e.g. abcd)"
-          className="bg-gray-900 text-white px-4 py-2 rounded-xl"
+          placeholder="Contains"
+          value={contains}
+          onChange={(e) =>
+            setContains(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+          }
+          className="bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-lg placeholder-[var(--color-text-secondary)] focus:outline-none"
+        />
+        <input
+          type="text"
+          placeholder="Ends with"
           value={suffix}
-          onChange={handleSuffixChange}
+          onChange={(e) =>
+            setSuffix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+          }
+          className="bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-lg placeholder-[var(--color-text-secondary)] focus:outline-none"
         />
       </div>
 
-      <div className="flex items-center gap-2 mb-4">
+      <label className="flex items-center gap-2 mb-6 text-[var(--color-text-secondary)]">
         <input
-          id="seed-toggle"
           type="checkbox"
           checked={useSeedPhrase}
           onChange={() => setUseSeedPhrase((v) => !v)}
         />
-        <label htmlFor="seed-toggle" className="text-white">
-          Generate Seed Phrase
-        </label>
-      </div>
+        Generate Seed Phrase
+      </label>
 
       <button
-        onClick={handleGenerate}
+        onClick={() => {
+          abortRef.current.abort = true;
+          setTimeout(() => generateVanityAddress(), 50);
+        }}
         disabled={loading}
-        className="cursor-pointer bg-blue-600 hover:bg-blue-700 font-semibold px-6 py-3 rounded-xl transition disabled:opacity-50 disabled:hover:bg-blue-600 disabled:cursor-not-allowed"
+        className="bg-[var(--color-accent)] cursor-pointer text-black font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading
-          ? `Generating...`
+          ? "Generating..."
           : `Generate ${useSeedPhrase ? "Seed Phrase" : "Private Key"}`}
       </button>
 
       {address && (
-        <div className="mt-6 w-full max-w-xl bg-gray-800 p-4 rounded-xl space-y-4">
-          {generatedType === "mnemonic" ? (
+        <div className="mt-8 w-full max-w-xl bg-[var(--color-surface)] p-5 rounded-xl space-y-4 text-[var(--color-text-primary)]">
+          {generatedType === "mnemonic" && (
             <div>
               <h2 className="text-lg font-semibold">Seed Phrase</h2>
-              <p className="break-words text-sm text-blue-300">{mnemonic}</p>
+              <p className="break-words text-sm text-[var(--color-accent)]">
+                {mnemonic}
+              </p>
             </div>
-          ) : (
+          )}
+          {generatedType === "privateKey" && (
             <div>
               <h2 className="text-lg font-semibold">Private Key</h2>
               <p className="break-all text-sm text-green-400">{privateKey}</p>
@@ -157,7 +221,14 @@ export default function Page() {
           )}
           <div>
             <h2 className="text-lg font-semibold">ETH Address</h2>
-            <p className="break-all text-sm text-yellow-300">{address}</p>
+            <p className="break-all text-sm">
+              {highlightAddressParts(
+                address,
+                generatedHighlight.prefix,
+                generatedHighlight.suffix,
+                generatedHighlight.contains
+              )}
+            </p>
           </div>
         </div>
       )}

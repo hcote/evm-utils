@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { navigationSystem } from "@/constants/navigation-system";
+import IcoChevronDown from "@/icons/IcoChevronDown";
 
 export default function Dropdown() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,6 +13,7 @@ export default function Dropdown() {
 
   const currentItem = navigationSystem.find((item) => item.path === pathname);
   const selectedName = currentItem ? currentItem.name : "Tools";
+  const SelectedIcon = currentItem?.Icon;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -37,13 +39,14 @@ export default function Dropdown() {
           color: "var(--color-text-primary)",
         }}
       >
+        {SelectedIcon && <SelectedIcon size={16} />}
         {selectedName}
         <span
-          className={`transform transition-transform duration-200 ${
+          className={`ml-1 transform transition-transform duration-200 ${
             dropdownOpen ? "rotate-180" : ""
           }`}
         >
-          ▾
+          <IcoChevronDown size={16} />
         </span>
       </button>
 
@@ -56,7 +59,7 @@ export default function Dropdown() {
           }}
         >
           <ul className="max-h-96 overflow-y-auto">
-            {navigationSystem.map(({ name, path }) => {
+            {navigationSystem.map(({ name, path, Icon }) => {
               const isSelected = path === pathname;
               return (
                 <li
@@ -65,12 +68,13 @@ export default function Dropdown() {
                     setDropdownOpen(false);
                     router.push(path);
                   }}
-                  className={`px-4 py-3 text-sm cursor-pointer transition rounded-md ${
+                  className={`px-4 py-3 text-sm cursor-pointer transition rounded-md flex items-center gap-2 ${
                     isSelected
-                      ? "bg-[rgba(255,255,255,0.08)] font-medium"
-                      : "hover:bg-[rgba(255,255,255,0.05)]"
+                      ? "bg-[rgba(255,255,255,0.1)] font-medium"
+                      : "hover:bg-[rgba(255,255,255,0.1)]"
                   }`}
                 >
+                  <Icon size={16} />
                   {name}
                 </li>
               );

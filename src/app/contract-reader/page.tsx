@@ -79,7 +79,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
+    <div className="text-white p-6">
       <h1 className="text-2xl font-bold mb-4">Contract Reader</h1>
 
       <div className="space-y-4 mb-6">

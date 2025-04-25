@@ -12,7 +12,7 @@ export default function Header() {
 
   return (
     <div
-      className="flex items-center gap-2 cursor-pointer p-3 rounded hover:bg-gray-800 transition-colors"
+      className="flex items-center gap-2 cursor-pointer rounded hover:bg-gray-800 transition-colors"
       onClick={handleRouteHome}
     >
       <IcoEthereumRainbow size={32} />

@@ -27,7 +27,7 @@ export const navigationSystem: Navigation[] = [
   {
     name: "Private Key Generator",
     path: "/pk-generator",
-    description: "Generate a random EVM private key and address, with optional support for vanity prefixes or suffixes.",
+    description: "Generate a random EVM private key and address, with support for vanity prefixes or suffixes.",
     Icon: IcoKeyGen,
   },  
   {

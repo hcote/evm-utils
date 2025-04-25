@@ -8,7 +8,7 @@ export const useGasPrice = () => {
       const data = await res.json();
       return data.gasPrice as string;
     },
-    staleTime: 30_000,
-    refetchInterval: 30_000,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 5, // 5 minutes
   });
 };

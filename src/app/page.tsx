@@ -25,7 +25,7 @@ export default function Page() {
           <div
             key={nav.path}
             onClick={() => handleNavigate(nav.path)}
-            className="transition-all duration-200 rounded-2xl p-6 cursor-pointer shadow-md hover:shadow-lg flex items-start gap-4"
+            className="transition-all duration-200 transform hover:scale-[1.02] hover:brightness-110 rounded-2xl p-6 cursor-pointer flex items-start gap-4"
             style={{
               backgroundColor: "var(--color-surface)",
             }}

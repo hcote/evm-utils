@@ -8,8 +8,8 @@ export const useEthPrice = () => {
       const data = await res.json();
       return data.price as string;
     },
-    staleTime: 60_000,
-    refetchInterval: 60_000,
-  });
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 5, // 5 minutes
+    });
 };
   

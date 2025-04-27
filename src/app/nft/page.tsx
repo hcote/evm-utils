@@ -42,6 +42,7 @@ export default function Page() {
     }
   };
 
+  // TODO: render image if can parse from response
   return (
     <div className="p-4 flex flex-col items-center gap-4">
       <h1 className="text-2xl font-bold">NFT Metadata Viewer</h1>

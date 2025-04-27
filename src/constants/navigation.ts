@@ -4,6 +4,7 @@ import IcoDecoder from "@/icons/IcoDecoder";
 import IcoENS from "@/icons/IcoENS";
 import IcoKeyGen from "@/icons/IcoKeyGen";
 import IcoMetadata from "@/icons/IcoMetadata";
+import IcoRpcRequest from "@/icons/IcoRpcRequest";
 import IcoUnits from "@/icons/IcoUnits";
 
 interface Navigation {
@@ -17,7 +18,7 @@ interface Navigation {
   }>;
 }
 
-export const navigationSystem: Navigation[] = [
+export const NAVIGATION: Navigation[] = [
   {
     name: "ETH Unit Converter",
     path: "/unit-converter",
@@ -29,12 +30,18 @@ export const navigationSystem: Navigation[] = [
     path: "/pk-generator",
     description: "Generate a random EVM private key and address, with support for vanity prefixes or suffixes.",
     Icon: IcoKeyGen,
-  },  
+  },
   {
     name: "Transaction Decoder",
     path: "/decoder",
     description: "Decode a raw EVM transaction to view its contents.",
     Icon: IcoDecoder,
+  },
+  {
+    name: "JSON RPC Methods",
+    path: "/rpc-requests",
+    description: "Interact with Ethereum nodes using JSON RPC methods.",
+    Icon: IcoRpcRequest,
   },
   {
     name: "Contract Reader",

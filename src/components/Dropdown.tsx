@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { navigationSystem } from "@/constants/navigation-system";
+import { NAVIGATION } from "@/constants/navigation";
 import IcoChevronDown from "@/icons/IcoChevronDown";
 
 export default function Dropdown() {
@@ -11,7 +11,7 @@ export default function Dropdown() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const currentItem = navigationSystem.find((item) => item.path === pathname);
+  const currentItem = NAVIGATION.find((item) => item.path === pathname);
   const selectedName = currentItem ? currentItem.name : "Tools";
   const SelectedIcon = currentItem?.Icon;
 
@@ -59,7 +59,7 @@ export default function Dropdown() {
           }}
         >
           <ul className="max-h-96 overflow-y-auto">
-            {navigationSystem.map(({ name, path, Icon }) => {
+            {NAVIGATION.map(({ name, path, Icon }) => {
               const isSelected = path === pathname;
               return (
                 <li

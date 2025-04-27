@@ -1,11 +1,11 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { navigationSystem } from "@/constants/navigation-system";
+import { NAVIGATION } from "@/constants/navigation";
 
 export default function SubPageHeader() {
   const pathname = usePathname();
-  const page = navigationSystem.find((nav) => nav.path === pathname);
+  const page = NAVIGATION.find((nav) => nav.path === pathname);
 
   if (!page) return null;
 

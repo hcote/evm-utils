@@ -71,7 +71,7 @@ export default function Page(): JSX.Element {
   };
 
   return (
-    <div className="p-6 space-y-5 bg-[var(--color-bg)] text-[var(--color-text-primary)] max-w-md mx-auto rounded-2xl shadow-lg border border-[var(--color-surface)]">
+    <div className="px-10 py-8 space-y-5 bg-[var(--color-bg)] text-[var(--color-text-primary)] max-w-md mx-auto rounded-2xl shadow-lg border border-[var(--color-surface)]">
       {(["wei", "gwei", "eth"] as const).map((field) => (
         <div className="space-y-2" key={field}>
           <label
@@ -91,11 +91,12 @@ export default function Page(): JSX.Element {
                 id={field}
                 inputMode="decimal"
                 placeholder={field}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--color-surface)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                className="w-full p-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[#aaa5a5]"
                 onChange={(e) => {
-                  const val = e.target.value;
-                  controllerField.onChange(val);
-                  handleUpdate(field, val);
+                  const rawVal = e.target.value;
+                  const sanitizedVal = sanitizeInput(rawVal);
+                  controllerField.onChange(sanitizedVal);
+                  handleUpdate(field, sanitizedVal);
                 }}
               />
             )}
@@ -106,9 +107,12 @@ export default function Page(): JSX.Element {
         <p className="text-sm text-[var(--color-text-secondary)]">
           ≈{" "}
           {values.eth && priceUSD
-            ? `$${formatUSD(
-                (parseFloat(values.eth) * parseFloat(priceUSD)).toFixed(2)
-              )}`
+            ? (() => {
+                const price = parseFloat(values.eth) * parseFloat(priceUSD);
+                return price < 0.01
+                  ? "<$0.01"
+                  : `$${formatUSD(price.toFixed(2))}`;
+              })()
             : "$0.00"}
         </p>
       </div>

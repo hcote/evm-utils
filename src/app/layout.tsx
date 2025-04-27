@@ -29,12 +29,24 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body
-        className={`min-h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--color-bg)] text-[var(--color-text-primary)]`}
+        className={`relative min-h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} antialiased text-[var(--color-text-primary)]`}
       >
+        {/* Background Image */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src="/eth-home.jpg"
+            alt="Background"
+            className="w-full h-full object-cover blur-xs opacity-5"
+          />
+        </div>
+
+        {/* Foreground Content */}
         <Providers>
           <TopNav />
-          <SubPageHeader />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 mt-20">
+            <SubPageHeader />
+            {children}
+          </main>
           <Footer />
         </Providers>
       </body>

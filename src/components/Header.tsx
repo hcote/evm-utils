@@ -10,10 +10,20 @@ export default function Header() {
     router.push("/");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleRouteHome();
+    }
+  };
+
   return (
     <div
-      className="flex items-center gap-2 cursor-pointer"
+      role="link"
+      tabIndex={0}
       onClick={handleRouteHome}
+      onKeyDown={handleKeyDown}
+      className="flex items-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] rounded-md px-1"
     >
       <IcoEthereumRainbow size={32} />
       <span className="text-xl font-semibold">EVM Utils</span>

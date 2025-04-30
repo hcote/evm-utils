@@ -53,6 +53,8 @@ export default function DropdownMenu({
           backgroundColor: "var(--color-surface)",
           color: "var(--color-text-primary)",
         }}
+        aria-haspopup="menu"
+        aria-expanded={open}
       >
         {selected.Icon && <selected.Icon size={16} className="shrink-0" />}
         {selected.name}
@@ -73,26 +75,30 @@ export default function DropdownMenu({
             color: "var(--color-text-primary)",
           }}
         >
-          <ul className="max-h-100 overflow-y-auto">
+          <ul role="menu" className="max-h-100 overflow-y-auto space-y-1 py-1">
             {options.map((option, i) => {
               const isSelected = option.name === selected.name;
               return (
-                <li
-                  key={i}
-                  onClick={() => {
-                    setOpen(false);
-                    onSelect(option);
-                  }}
-                  className={`px-4 py-3 text-sm cursor-pointer transition rounded-md flex items-center gap-2 ${dropdownItemClassName} ${
-                    isSelected
-                      ? "bg-[rgba(255,255,255,0.1)] font-medium"
-                      : "hover:bg-[rgba(255,255,255,0.1)]"
-                  }`}
-                >
-                  {option.Icon && (
-                    <option.Icon size={16} className="shrink-0" />
-                  )}
-                  {option.name}
+                <li key={i} role="none">
+                  <button
+                    role="menuitem"
+                    onClick={() => {
+                      onSelect(option);
+                      setOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 text-sm transition rounded-md flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+                      dropdownItemClassName ?? ""
+                    } ${
+                      isSelected
+                        ? "bg-[rgba(255,255,255,0.1)] font-medium"
+                        : "hover:bg-[rgba(255,255,255,0.1)]"
+                    }`}
+                  >
+                    {option.Icon && (
+                      <option.Icon size={16} className="shrink-0" />
+                    )}
+                    {option.name}
+                  </button>
                 </li>
               );
             })}

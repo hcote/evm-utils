@@ -39,7 +39,13 @@ export default function Page() {
 
   return (
     <Container>
-      <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleResolve();
+        }}
+        className="space-y-4"
+      >
         <TextInput
           label="ENS Name"
           placeholder="Enter ENS name (e.g. vitalik.eth)"
@@ -53,13 +59,13 @@ export default function Page() {
           disabled={isLoading || !ensName.includes(".eth")}
           expand
         />
+      </form>
 
-        {error && (
-          <p className="text-sm text-[var(--color-text-error)] pt-2">
-            Error: {error}
-          </p>
-        )}
-      </div>
+      {error && (
+        <p className="text-sm text-[var(--color-text-error)] pt-2">
+          Error: {error}
+        </p>
+      )}
 
       {resolvedAddress && (
         <ResultDisplay

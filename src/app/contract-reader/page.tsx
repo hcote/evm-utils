@@ -3,7 +3,7 @@
 import erc20Abi from "@/abis/erc20";
 import erc721Abi from "@/abis/erc721";
 import { jsonStringifyBigInt } from "@/utils/jsonStringifyBigInt";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Abi, AbiFunction, isAddress } from "viem";
 import { getPublicClient } from "@/utils/viemPublicClient";
 import Container from "@/ui/Container";
@@ -139,52 +139,50 @@ export default function Page() {
         />
       </div>
 
-      <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
-        <TextInput
-          placeholder="Contract Address"
-          value={contractAddress}
-          onChange={(e) => setContractAddress(e.target.value)}
+      <TextInput
+        placeholder="Contract Address"
+        value={contractAddress}
+        onChange={(e) => setContractAddress(e.target.value)}
+      />
+
+      <DropdownMenu
+        selected={abiOption}
+        options={ABI_OPTIONS}
+        onSelect={setAbiOption}
+        buttonClassName="w-full"
+        dropdownClassName="w-full"
+        dropdownItemClassName="w-full"
+      />
+
+      {abiOption.id === "Custom" && (
+        <TextArea
+          placeholder="Paste ABI JSON"
+          value={abiJson}
+          onChange={(e) => setAbiJson(e.target.value)}
+        />
+      )}
+
+      <div className="flex flex-col items-center justify-center gap-4">
+        <Button
+          expand
+          label="Load Contract"
+          onClick={handleLoadAbi}
+          disabled={!isAddress(contractAddress)}
         />
 
-        <DropdownMenu
-          selected={abiOption}
-          options={ABI_OPTIONS}
-          onSelect={setAbiOption}
-          buttonClassName="w-full"
-          dropdownClassName="w-full"
-          dropdownItemClassName="w-full"
-        />
-
-        {abiOption.id === "Custom" && (
-          <TextArea
-            placeholder="Paste ABI JSON"
-            value={abiJson}
-            onChange={(e) => setAbiJson(e.target.value)}
-          />
+        {isInputEmpty && (
+          <>
+            <span className="text-sm font-semibold text-[var(--color-text-secondary)]">
+              OR
+            </span>
+            <Button
+              label="Test it out"
+              onClick={handleTest}
+              variant="inverse"
+              expand
+            />
+          </>
         )}
-
-        <div className="flex flex-col items-center justify-center gap-4">
-          <Button
-            expand
-            label="Load Contract"
-            onClick={handleLoadAbi}
-            disabled={!isAddress(contractAddress)}
-          />
-
-          {isInputEmpty && (
-            <>
-              <span className="text-sm font-semibold text-[var(--color-text-secondary)]">
-                OR
-              </span>
-              <Button
-                label="Test it out"
-                onClick={handleTest}
-                variant="inverse"
-                expand
-              />
-            </>
-          )}
-        </div>
 
         {error && (
           <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
@@ -194,10 +192,7 @@ export default function Page() {
       {abiFunctions.length > 0 && (
         <div className="space-y-6">
           {abiFunctions.map((fn) => (
-            <div
-              key={fn.name}
-              className="px-8 py-6 bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4"
-            >
+            <Fragment key={fn.name}>
               <h2 className="text-lg font-semibold">{fn.name}</h2>
 
               {fn.inputs.map((input, index) => (
@@ -221,7 +216,7 @@ export default function Page() {
                   Result: {jsonStringifyBigInt(results[fn.name])}
                 </div>
               )}
-            </div>
+            </Fragment>
           ))}
         </div>
       )}

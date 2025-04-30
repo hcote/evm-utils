@@ -2,7 +2,7 @@
 
 import { Navigation } from "@/constants/navigation";
 import { useRouter } from "next/navigation";
-import { JSX } from "react";
+import { JSX, KeyboardEvent } from "react";
 
 interface NavigationCardProps {
   nav: Omit<Navigation, "Icon"> & { Icon: JSX.Element };
@@ -15,10 +15,20 @@ export default function NavigationCard({ nav }: NavigationCardProps) {
     router.push(path);
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleNavigate(nav.path);
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => handleNavigate(nav.path)}
-      className="group transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:brightness-120 bg-[var(--color-surface)] border border-white/10 rounded-2xl p-6 cursor-pointer flex flex-col gap-4"
+      onKeyDown={handleKeyDown}
+      className="group transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:brightness-120 bg-[var(--color-surface)] border border-white/10 rounded-2xl p-6 cursor-pointer flex flex-col gap-4 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
     >
       <div className="flex items-center gap-4">
         <div className="p-2 rounded-full bg-[var(--color-bg)] transition">

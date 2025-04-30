@@ -201,7 +201,7 @@ export default function Page() {
             type="checkbox"
             checked={useSeedPhrase}
             onChange={() => setUseSeedPhrase((v) => !v)}
-            className="accent-[var(--color-accent)] cursor-pointer"
+            className="accent-[var(--color-bg)] cursor-pointer"
           />
           <label
             htmlFor="useSeedPhrase"

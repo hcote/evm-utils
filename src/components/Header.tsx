@@ -23,7 +23,7 @@ export default function Header() {
       tabIndex={0}
       onClick={handleRouteHome}
       onKeyDown={handleKeyDown}
-      className="flex items-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] rounded-md px-1"
+      className="flex items-center gap-2 cursor-pointer rounded-md px-1"
     >
       <IcoEthereumRainbow size={32} />
       <span className="text-xl font-semibold">EVM Utils</span>

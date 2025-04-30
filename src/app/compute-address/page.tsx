@@ -16,6 +16,9 @@ export default function Page() {
   const [contains, setContains] = useState("");
   const [suffix, setSuffix] = useState("");
   const [contractAddress, setContractAddress] = useState<string | null>(null);
+  const [usedPrefix, setUsedPrefix] = useState("");
+  const [usedContains, setUsedContains] = useState("");
+  const [usedSuffix, setUsedSuffix] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [searchMode, setSearchMode] = useState<"single" | "search">("single");
   const [loading, setLoading] = useState(false);
@@ -46,48 +49,53 @@ export default function Page() {
     const s = suffix.toLowerCase();
     const c = contains.toLowerCase();
 
-    const matches = [];
-    let i = 0;
+    const highlights: JSX.Element[] = [];
+    let remaining = address;
 
     if (p && lower.startsWith(`0x${p}`)) {
-      matches.push(
+      const prefixLen = 2 + p.length;
+      highlights.push(
         <span key="prefix" className="text-[#889cff] font-semibold">
-          {address.slice(0, 2 + p.length)}
+          {remaining.slice(0, prefixLen)}
         </span>
       );
-      i = 2 + p.length;
+      remaining = remaining.slice(prefixLen);
     }
 
-    const containsIndex = c ? lower.indexOf(c, i) : -1;
-    if (containsIndex !== -1 && containsIndex >= i) {
-      if (containsIndex > i) {
-        matches.push(
-          <span key="pre-contains">{address.slice(i, containsIndex)}</span>
+    const lowerRem = remaining.toLowerCase();
+    const containsIndex = c ? lowerRem.indexOf(c) : -1;
+    if (containsIndex !== -1) {
+      if (containsIndex > 0) {
+        highlights.push(
+          <span key="pre-contains">{remaining.slice(0, containsIndex)}</span>
         );
       }
-      matches.push(
+      highlights.push(
         <span key="contains" className="text-red-400 font-semibold">
-          {address.slice(containsIndex, containsIndex + c.length)}
+          {remaining.slice(containsIndex, containsIndex + c.length)}
         </span>
       );
-      i = containsIndex + c.length;
+      remaining = remaining.slice(containsIndex + c.length);
     }
 
-    const suffixIndex = s ? lower.length - s.length : lower.length;
-    if (i < suffixIndex) {
-      matches.push(<span key="mid">{address.slice(i, suffixIndex)}</span>);
-      i = suffixIndex;
-    }
-
-    if (s && lower.endsWith(s)) {
-      matches.push(
+    const lowerRem2 = remaining.toLowerCase();
+    if (s && lowerRem2.endsWith(s)) {
+      const suffixStart = remaining.length - s.length;
+      if (suffixStart > 0) {
+        highlights.push(
+          <span key="mid">{remaining.slice(0, suffixStart)}</span>
+        );
+      }
+      highlights.push(
         <span key="suffix" className="text-green-400 font-semibold">
-          {address.slice(-s.length)}
+          {remaining.slice(suffixStart)}
         </span>
       );
+    } else {
+      highlights.push(<span key="rest">{remaining}</span>);
     }
 
-    return <span className="font-mono">{matches}</span>;
+    return <span className="font-mono">{highlights}</span>;
   };
 
   const handleGenerate = () => {
@@ -112,6 +120,9 @@ export default function Page() {
 
       setContractAddress(result);
       setGeneratedNonce(nonce);
+      setUsedPrefix(prefix);
+      setUsedContains(contains);
+      setUsedSuffix(suffix);
     } catch {
       setError("Failed to compute contract address.");
     }
@@ -147,6 +158,9 @@ export default function Page() {
       if (matchesVanity(candidate, prefix, suffix, contains)) {
         setContractAddress(candidate);
         setGeneratedNonce(i.toString());
+        setUsedPrefix(prefix);
+        setUsedContains(contains);
+        setUsedSuffix(suffix);
         setLoading(false);
         return;
       }
@@ -231,13 +245,7 @@ export default function Page() {
       <div className="mt-4">
         <Button
           expand
-          label={
-            loading
-              ? "Searching..."
-              : searchMode === "search"
-              ? "Find Nonce"
-              : "Generate Address"
-          }
+          label={loading ? "Searching..." : "Generate Address"}
           onClick={() => {
             abortRef.current.abort = true;
             setTimeout(() => {
@@ -261,9 +269,9 @@ export default function Page() {
               header: "Contract Address",
               text: highlightAddressParts(
                 contractAddress,
-                prefix,
-                suffix,
-                contains
+                usedPrefix,
+                usedSuffix,
+                usedContains
               ),
               className: "break-all",
             },

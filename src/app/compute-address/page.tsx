@@ -124,7 +124,7 @@ export default function Page() {
       return;
     }
 
-    const start = parseInt(startingNonce);
+    const start = parseInt(startingNonce || "0");
     if (isNaN(start) || start < 0) {
       setError("Starting nonce must be a valid non-negative number.");
       return;

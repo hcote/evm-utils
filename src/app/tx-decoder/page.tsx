@@ -18,7 +18,7 @@ export default function Page() {
   const handleDecode = () => {
     try {
       setError("");
-      setTestDecoded(null); // clear test result
+      setTestDecoded(null);
       if (!isHex(rawTx)) throw new Error("Input is not a valid transaction.");
       const tx = parseTransaction(rawTx as `0x${string}`);
       setDecoded(jsonStringifyBigInt(tx));
@@ -32,7 +32,7 @@ export default function Page() {
     const testHex =
       "0x02ef0182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0";
     try {
-      setDecoded(null); // clear real result
+      setDecoded(null);
       const tx = parseTransaction(testHex as `0x${string}`);
       setTestDecoded(jsonStringifyBigInt(tx));
     } catch (err: any) {
@@ -41,7 +41,7 @@ export default function Page() {
   };
 
   return (
-    <Container size="xl" className="space-y-6">
+    <Container className="space-y-6">
       <TextArea
         placeholder="Enter raw transaction (0x...)"
         value={rawTx}
@@ -72,7 +72,9 @@ export default function Page() {
         )}
       </div>
 
-      {error && <p className="text-sm text-red-400 pt-2">{error}</p>}
+      {error && (
+        <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
+      )}
 
       {(decoded || testDecoded) && (
         <ResultDisplay

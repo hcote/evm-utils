@@ -8,9 +8,13 @@ export interface ResultItem {
 
 interface ResultDisplayProps {
   items: ResultItem[];
+  wrapPreText?: boolean;
 }
 
-export default function ResultDisplay({ items }: ResultDisplayProps) {
+export default function ResultDisplay({
+  items,
+  wrapPreText = false,
+}: ResultDisplayProps) {
   return (
     <div className="mt-4 p-4 bg-[var(--color-bg)] rounded-md border border-[var(--color-text-secondary)] space-y-4 overflow-x-auto">
       {items.map((item, idx) => (
@@ -24,7 +28,13 @@ export default function ResultDisplay({ items }: ResultDisplayProps) {
             }`}
           >
             {typeof item.text === "string" ? (
-              <pre className="whitespace-pre-wrap break-words">{item.text}</pre>
+              <pre
+                className={
+                  wrapPreText ? "whitespace-pre-wrap" : "whitespace-pre"
+                }
+              >
+                {item.text}
+              </pre>
             ) : (
               item.text
             )}

@@ -79,7 +79,6 @@ export default function Page() {
 
   return (
     <div className="px-8 py-6 max-w-2xl mx-auto space-y-6">
-      {/* Title and Network Dropdown */}
       <div className="flex items-center justify-end">
         <DropdownMenu
           selected={selectedNetwork}
@@ -88,7 +87,6 @@ export default function Page() {
         />
       </div>
 
-      {/* RPC Methods */}
       <div className="grid gap-4">
         {RPC_METHODS.map(({ method, description, parameters }) => (
           <Container key={method} size="full">

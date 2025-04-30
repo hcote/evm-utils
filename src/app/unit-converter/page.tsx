@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Container from "@/ui/Container";
 import TextInput from "@/ui/TextInput";
+import Button from "@/ui/Button";
 import { useEthPrice } from "@/hooks/use-eth-price";
 import { formatUSD } from "@/utils/formatUSD";
 import { parseUnits, formatUnits } from "viem";
@@ -64,6 +65,8 @@ export default function Page() {
     }
   };
 
+  const hasInput = values.wei || values.gwei || values.eth;
+
   return (
     <Container>
       {(["wei", "gwei", "eth"] as const).map((field) => (
@@ -76,7 +79,8 @@ export default function Page() {
           onChange={(e) => handleUpdate(field, e.target.value)}
         />
       ))}
-      <div className="pt-2">
+
+      <div className="pt-2 flex items-center justify-between">
         <p className="text-sm text-[var(--color-text-secondary)]">
           ≈{" "}
           {values.eth && priceUSD
@@ -88,6 +92,17 @@ export default function Page() {
               })()
             : "$0.00"}
         </p>
+        <Button
+          label="Clear Form"
+          variant="inverse"
+          size="sm"
+          onClick={() => setValues({ wei: "", gwei: "", eth: "" })}
+          className={
+            hasInput
+              ? "opacity-100 visible pointer-events-auto"
+              : "opacity-0 invisible pointer-events-none"
+          }
+        />
       </div>
     </Container>
   );

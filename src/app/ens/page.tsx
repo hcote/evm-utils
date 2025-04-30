@@ -37,9 +37,9 @@ export default function Page() {
 
   return (
     <Container>
-      {/* Form Card */}
       <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
         <TextInput
+          label="ENS Name"
           placeholder="Enter ENS name (e.g. vitalik.eth)"
           value={ensName}
           onChange={(e) => setEnsName(e.target.value)}
@@ -52,12 +52,16 @@ export default function Page() {
           expand
         />
 
-        {error && <p className="text-sm text-red-400 pt-2">Error: {error}</p>}
+        {error && (
+          <p className="text-sm text-[var(--color-text-error)] pt-2">
+            Error: {error}
+          </p>
+        )}
       </div>
 
-      {/* Result */}
       {resolvedAddress && (
         <ResultDisplay
+          wrapPreText
           items={[
             {
               header: "Resolved Address:",

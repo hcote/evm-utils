@@ -17,7 +17,7 @@ const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary: "bg-[var(--color-accent)] text-black hover:opacity-85",
   inverse:
-    "bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-white/10 hover:bg-[var(--color-btn-hover)]",
+    "bg-[var(--color-bg)] text-[var(--color-text-primary)] border border-white/10 hover:bg-[var(--color-btn-hover)]",
 };
 
 export default function Button({

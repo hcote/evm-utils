@@ -2,6 +2,7 @@
 
 import Button from "@/ui/Button";
 import Container from "@/ui/Container";
+import ResultDisplay from "@/ui/ResultDisplay";
 import TextArea from "@/ui/TextArea";
 import { useState } from "react";
 
@@ -85,14 +86,14 @@ export default function TransactionDecoder() {
 
   const handleTest = async () => {
     setDecoded(null);
-    setInput(""); // optional: clear input UI if desired
+    setInput("");
     await decodeInputData(
       "0xa9059cbb000000000000000000000000448ddf8326d95723f1f700d58ad8095036621108000000000000000000000000000000000000000000000000000000000db58580"
     );
   };
 
   return (
-    <Container size="lg" className="space-y-6">
+    <Container className="space-y-6">
       <TextArea
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -122,41 +123,46 @@ export default function TransactionDecoder() {
         )}
       </div>
 
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {error && (
+        <div className="text-[var(--color-text-error)] mb-4">{error}</div>
+      )}
 
       {decoded && (
-        <div className="bg-gray-800 p-6 rounded-lg text-white space-y-4">
-          <div>
-            <p>
-              <strong>Function Selector:</strong> {decoded.functionSelector}
-            </p>
-            <p>
-              <strong>Function Name:</strong> {decoded.functionName}
-            </p>
-          </div>
-
-          <div>
-            <p className="font-semibold mb-2">Parameters:</p>
-            <ol className="list-decimal list-inside space-y-2">
-              {decoded.parameters.map((param: any, idx: number) => (
-                <li key={idx}>
-                  <div className="break-all">
-                    <p>
-                      <strong>Type:</strong> {param.type}
-                    </p>
-                    <p>
-                      <strong>Raw:</strong> {param.raw}
-                    </p>
-                    <p>
-                      <strong>Decoded:</strong> {param.decoded}
-                      {param.type === "uint" && " (wei)"}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
+        <ResultDisplay
+          items={[
+            {
+              header: "Function Selector",
+              text: decoded.functionSelector,
+            },
+            {
+              header: "Function Name",
+              text: decoded.functionName,
+            },
+            {
+              header: "Parameters",
+              text: (
+                <ol className="list-decimal list-inside space-y-2">
+                  {decoded.parameters.map((param: any, idx: number) => (
+                    <li key={idx}>
+                      <div className="break-all">
+                        <p>
+                          <strong>Type:</strong> {param.type}
+                        </p>
+                        <p>
+                          <strong>Raw:</strong> {param.raw}
+                        </p>
+                        <p>
+                          <strong>Decoded:</strong> {param.decoded}
+                          {param.type === "uint" && " (wei)"}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              ),
+            },
+          ]}
+        />
       )}
     </Container>
   );

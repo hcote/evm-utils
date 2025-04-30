@@ -31,21 +31,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`relative min-h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} antialiased text-[var(--color-text-primary)]`}
       >
-        {/* Background Image */}
-        <div className="absolute inset-0 -z-10">
-          <img
-            src="/eth-home.jpg"
-            alt="Background"
-            className="w-full h-full object-cover blur-xs opacity-5"
-          />
-        </div>
-
-        {/* Foreground Content */}
         <Providers>
           <TopNav />
-          <main className="flex-1 mt-20">
-            <SubPageHeader />
-            {children}
+          <main className="flex-1 mt-14 py-16 px-5">
+            <div className="max-w-[1200px] mx-auto w-full">
+              <SubPageHeader />
+              {children}
+            </div>
           </main>
           <Footer />
         </Providers>

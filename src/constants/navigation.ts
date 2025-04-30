@@ -34,7 +34,7 @@ export const NAVIGATION: Navigation[] = [
   },
   {
     name: "Transaction Decoder",
-    path: "/decoder",
+    path: "/tx-decoder",
     description: "Decode a raw EVM transaction to view its contents.",
     Icon: IcoDecoder,
   },
@@ -65,13 +65,13 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "Compute Contract Address",
     path: "/compute-address",
-    description: "Calculate the address of a contract from a deployer address.",
+    description: "Calculate the deployed-at address for a smart contract given a deployer address.",
     Icon: IcoCompute
   },
   {
     name: "Data Decoder",
     path: "/data-decoder",
-    description: "Make transaction data readable format.",
+    description: "Make transaction data human-readable.",
     Icon: IcoDataDecoder
   },
 ];

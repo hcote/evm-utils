@@ -1,14 +1,13 @@
 interface ContainerProps {
   children: React.ReactNode;
   className?: string;
-  size?: "sm" | "md" | "lg" | "xl" | "full";
+  size?: "sm" | "md" | "lg" | "full";
 }
 
 const sizeClasses = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-xl",
+  sm: "max-w-md",
+  md: "max-w-xl",
+  lg: "max-w-3xl",
   full: "w-full max-w-none",
 };
 

@@ -4,7 +4,6 @@ import { NAVIGATION } from "@/constants/navigation";
 export default function Page() {
   return (
     <div className="relative text-[var(--color-text-primary)]">
-      {/* Hero Section */}
       <div className="text-center max-w-2xl mx-auto mb-16">
         <h1 className="text-4xl font-extrabold leading-tight mb-4">
           EVM Utils
@@ -14,7 +13,6 @@ export default function Page() {
         </p>
       </div>
 
-      {/* Tools Grid */}
       <div
         id="tools"
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"

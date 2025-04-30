@@ -41,39 +41,38 @@ export default function Page() {
     }
   };
 
-  // TODO: support prefix, contains, suffix for generated contract address
   return (
     <Container>
-      {/* Form Card */}
       <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
-        {/* Wallet Address */}
         <TextInput
-          placeholder="Wallet address (0x...)"
+          label="Wallet Address"
+          placeholder="Wallet address"
           value={walletAddress}
           onChange={(e) => setWalletAddress(e.target.value)}
         />
 
-        {/* Nonce */}
         <TextInput
-          placeholder="Nonce (e.g., 0)"
+          label="Nonce"
+          placeholder="Nonce"
           value={nonce}
           onChange={(e) => setNonce(e.target.value)}
         />
 
-        {/* Generate Button */}
         <Button
           expand
           label="Generate Address"
           onClick={handleGenerate}
-          disabled={!walletAddress || !nonce}
+          disabled={!isAddress(walletAddress) || !nonce}
         />
 
-        {error && <p className="text-sm text-red-400 pt-2">{error}</p>}
+        {error && (
+          <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
+        )}
       </div>
 
-      {/* Result */}
       {contractAddress && (
         <ResultDisplay
+          wrapPreText
           items={[
             {
               header: "Contract Address:",

@@ -8,6 +8,7 @@
   --color-accent: #E5E5E5;
   --color-btn-hover: #1D1D1E;
   --color-border: #151617;
+  --color-text-error: #dd7072;
 }
 
 html.dark {
@@ -18,6 +19,7 @@ html.dark {
   --color-accent: #E5E5E5;
   --color-btn-hover: #1D1D1E;
   --color-border: #151617;
+  --color-text-error: #dd7072;
 }
 
 body {

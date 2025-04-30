@@ -64,8 +64,7 @@ export default function Page() {
   const isInputEmpty = !address && !tokenId;
 
   return (
-    <Container size="lg" className="space-y-6">
-      {/* Network Dropdown */}
+    <Container className="space-y-6">
       <div className="flex justify-end">
         <DropdownMenu
           selected={selectedNetwork}
@@ -77,25 +76,29 @@ export default function Page() {
         />
       </div>
 
-      {/* Form */}
       <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
         <TextInput
+          label="NFT Address"
           placeholder="NFT Contract Address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
 
         <TextInput
+          label="Token ID"
           placeholder="Token ID"
           value={tokenId}
-          onChange={(e) => setTokenId(e.target.value)}
+          onChange={(e) => {
+            const numericOnly = e.target.value.replace(/\D/g, "");
+            setTokenId(numericOnly);
+          }}
         />
 
         <div className="flex flex-col align-center items-center justify-center gap-4">
           <Button
             label={loading ? "Fetching..." : "Fetch Metadata"}
             onClick={() => fetchMetadata()}
-            disabled={loading || !address || !tokenId}
+            disabled={loading || !isAddress(address) || !tokenId}
             expand
           />
 
@@ -115,27 +118,28 @@ export default function Page() {
           )}
         </div>
 
-        {error && <p className="text-sm text-red-400 pt-2">{error}</p>}
+        {error && (
+          <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
+        )}
       </div>
 
-      {/* Result */}
       {metadata && (
         <>
-          {/* {metadata.image && (
+          {metadata.image && (
             <Image
               src={resolveIPFS(metadata.image)}
               alt="NFT preview"
               width={160}
               height={160}
-              className="rounded-xl border border-[var(--color-border)] shadow"
+              className="rounded-xl border border-[var(--color-border)] shadow mx-auto"
             />
-          )} */}
+          )}
           <ResultDisplay
             items={[
               {
-                header: "Metadata",
+                header: "Metadata:",
                 text: JSON.stringify(metadata, null, 2),
-                className: "text-sm leading-relaxed", // optional styling for spacing
+                className: "text-sm leading-relaxed",
               },
             ]}
           />

@@ -12,7 +12,7 @@ export default function SubPageHeader() {
   const { name, description } = page;
 
   return (
-    <div className="flex items-center justify-center pb-6 mb-8">
+    <div className="flex items-center justify-center mb-12">
       <div className="max-w-[24rem] w-full text-center">
         <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">
           {name}

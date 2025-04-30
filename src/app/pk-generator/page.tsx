@@ -156,7 +156,6 @@ export default function Page() {
   return (
     <Container>
       <div className="relative space-y-3">
-        {/* Inputs */}
         <div className="space-y-1">
           <TextInput
             id="prefix"
@@ -193,14 +192,7 @@ export default function Page() {
             }
           />
         </div>
-
-        {/* ✅ Subtle helper text under the inputs */}
       </div>
-
-      {/* <p className="text-xs text-[var(--color-text-secondary)]">
-        Inputs are optional. They apply to the generated address only (not the
-        private key or seed phrase).
-      </p> */}
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
@@ -243,17 +235,18 @@ export default function Page() {
             : `Generate ${useSeedPhrase ? "Seed Phrase" : "Private Key"}`
         }
         onClick={() => {
-          abortRef.current.abort = true; // cancel old generation
+          abortRef.current.abort = true;
           setTimeout(() => {
             abortRef.current.abort = false;
             generateVanityAddress();
-          }, 50); // allow 50ms delay
+          }, 50);
         }}
         expand
         disabled={loading}
       />
       {address && (
         <ResultDisplay
+          wrapPreText
           items={
             [
               generatedType === "mnemonic" && mnemonic

@@ -127,8 +127,7 @@ export default function Page() {
   const isInputEmpty = !contractAddress;
 
   return (
-    <Container size="lg" className="space-y-6">
-      {/* Network Dropdown */}
+    <Container className="space-y-6">
       <div className="flex justify-end">
         <DropdownMenu
           selected={selectedNetwork}
@@ -140,7 +139,6 @@ export default function Page() {
         />
       </div>
 
-      {/* Form Card */}
       <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
         <TextInput
           placeholder="Contract Address"
@@ -148,7 +146,6 @@ export default function Page() {
           onChange={(e) => setContractAddress(e.target.value)}
         />
 
-        {/* ABI Dropdown */}
         <DropdownMenu
           selected={abiOption}
           options={ABI_OPTIONS}
@@ -189,10 +186,11 @@ export default function Page() {
           )}
         </div>
 
-        {error && <p className="text-sm text-red-400 pt-2">{error}</p>}
+        {error && (
+          <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
+        )}
       </div>
 
-      {/* Functions Section */}
       {abiFunctions.length > 0 && (
         <div className="space-y-6">
           {abiFunctions.map((fn) => (

@@ -253,14 +253,12 @@ export default function Page() {
                 ? {
                     header: "Seed Phrase",
                     text: mnemonic,
-                    className: "text-[var(--color-text-secondary)]",
                   }
                 : null,
               generatedType === "privateKey" && privateKey
                 ? {
                     header: "Private Key",
                     text: privateKey,
-                    className: "text-[var(--color-text-secondary)]",
                   }
                 : null,
               {

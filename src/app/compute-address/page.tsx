@@ -10,6 +10,7 @@ import { isAddress, getContractAddress } from "viem/utils";
 export default function Page() {
   const [walletAddress, setWalletAddress] = useState("");
   const [nonce, setNonce] = useState("");
+  const [generatedNonce, setGeneratedNonce] = useState<string | null>(null);
   const [startingNonce, setStartingNonce] = useState("0");
   const [prefix, setPrefix] = useState("");
   const [contains, setContains] = useState("");
@@ -110,6 +111,7 @@ export default function Page() {
       });
 
       setContractAddress(result);
+      setGeneratedNonce(nonce);
     } catch {
       setError("Failed to compute contract address.");
     }
@@ -144,7 +146,7 @@ export default function Page() {
 
       if (matchesVanity(candidate, prefix, suffix, contains)) {
         setContractAddress(candidate);
-        setNonce(i.toString());
+        setGeneratedNonce(i.toString());
         setLoading(false);
         return;
       }
@@ -153,7 +155,8 @@ export default function Page() {
     }
 
     setLoading(false);
-    if (!abortRef.current.abort) alert("No matching address found in range.");
+    if (!abortRef.current.abort)
+      alert("No matching address found in next 1000 nonces.");
   };
 
   return (
@@ -266,7 +269,7 @@ export default function Page() {
             },
             {
               header: "Nonce",
-              text: nonce,
+              text: generatedNonce ?? "",
             },
           ]}
         />

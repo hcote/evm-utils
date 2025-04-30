@@ -10,6 +10,7 @@ import { isAddress, getContractAddress } from "viem/utils";
 export default function Page() {
   const [walletAddress, setWalletAddress] = useState("");
   const [nonce, setNonce] = useState("");
+  const [startingNonce, setStartingNonce] = useState("0");
   const [prefix, setPrefix] = useState("");
   const [contains, setContains] = useState("");
   const [suffix, setSuffix] = useState("");
@@ -123,14 +124,18 @@ export default function Page() {
       return;
     }
 
+    const start = parseInt(startingNonce);
+    if (isNaN(start) || start < 0) {
+      setError("Starting nonce must be a valid non-negative number.");
+      return;
+    }
+
     setLoading(true);
     abortRef.current.abort = false;
 
-    const maxAttempts = 50000;
-    for (let i = 0; i < maxAttempts; i++) {
-      if (abortRef.current.abort) {
-        break;
-      }
+    const maxAttempts = 1000;
+    for (let i = start; i < start + maxAttempts; i++) {
+      if (abortRef.current.abort) break;
 
       const candidate = getContractAddress({
         from: walletAddress as `0x${string}`,
@@ -148,7 +153,7 @@ export default function Page() {
     }
 
     setLoading(false);
-    if (!abortRef.current.abort) alert("No matching address found.");
+    if (!abortRef.current.abort) alert("No matching address found in range.");
   };
 
   return (
@@ -184,7 +189,7 @@ export default function Page() {
       )}
 
       {searchMode === "search" && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
           <TextInput
             label="Starts with"
             placeholder="Prefix"
@@ -207,6 +212,14 @@ export default function Page() {
             value={suffix}
             onChange={(e) =>
               setSuffix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+            }
+          />
+          <TextInput
+            label="Starting Nonce"
+            placeholder="Start nonce"
+            value={startingNonce}
+            onChange={(e) =>
+              setStartingNonce(e.target.value.replace(/\D/g, ""))
             }
           />
         </div>

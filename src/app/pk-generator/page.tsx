@@ -114,7 +114,7 @@ export default function Page() {
 
     if (p && lower.startsWith(`0x${p}`)) {
       matches.push(
-        <span key="prefix" className="text-[#889cff] font-semibold">
+        <span key="prefix" className="text-[var(--color-purple)] font-semibold">
           {address.slice(0, 2 + p.length)}
         </span>
       );
@@ -253,14 +253,14 @@ export default function Page() {
                 ? {
                     header: "Seed Phrase",
                     text: mnemonic,
-                    className: "text-[#939699]",
+                    className: "text-[var(--color-text-secondary)]",
                   }
                 : null,
               generatedType === "privateKey" && privateKey
                 ? {
                     header: "Private Key",
                     text: privateKey,
-                    className: "text-[#939699]",
+                    className: "text-[var(--color-text-secondary)]",
                   }
                 : null,
               {

@@ -75,7 +75,7 @@ export default function DropdownMenu({
             color: "var(--color-text-primary)",
           }}
         >
-          <ul role="menu" className="max-h-100 overflow-y-auto space-y-1 py-1">
+          <ul role="menu" className="max-h-100 overflow-y-auto space-y-0.5">
             {options.map((option, i) => {
               const isSelected = option.name === selected.name;
               return (

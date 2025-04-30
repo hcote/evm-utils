@@ -9,7 +9,7 @@ export default function GasPrice() {
   const getTextColor = (priceStr: string) => {
     const price = Number(priceStr);
     if (!priceStr || isNaN(price)) return "text-white";
-    if (price < 10) return "text-[#9ee3b7]";
+    if (price < 10) return "text-[var(--color-green)]";
     if (price <= 40) return "text-yellow-200";
     return "text-red-200";
   };

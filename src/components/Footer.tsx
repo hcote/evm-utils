@@ -29,7 +29,7 @@ export default function Footer() {
           <GasPrice />
         </div>
 
-        <div className="flex-1 text-xs md:text-right text-center">
+        <div className="flex-1 text-sm md:text-right text-center">
           © {year} EVM Utils
         </div>
       </div>

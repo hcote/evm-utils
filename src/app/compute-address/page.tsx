@@ -55,7 +55,7 @@ export default function Page() {
     if (p && lower.startsWith(`0x${p}`)) {
       const prefixLen = 2 + p.length;
       highlights.push(
-        <span key="prefix" className="text-[#889cff] font-semibold">
+        <span key="prefix" className="text-[var(--color-purple)] font-semibold">
           {remaining.slice(0, prefixLen)}
         </span>
       );

@@ -25,6 +25,20 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
+/**
+ * TODO:
+ * - mobile responsiveness (nav bar, apply slight padding to page)
+ * - ensure consistent color usage across the app, no one-offs
+ * - code cleanup...
+ * - consider placing forms + ResultDisplay side by side for wider screens?
+ * - SEO
+ * - support prefix, contains, suffix for generated contract address
+ * - extact <div> that's used across most/all of my forms into <Container>?
+ *
+ * - rpc requests page
+ * - contract reader page
+ */
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">

@@ -33,7 +33,7 @@ interface RootLayoutProps {
  * - consider placing forms + ResultDisplay side by side for wider screens?
  * - SEO
  * - support prefix, contains, suffix for generated contract address
- * - extact <div> that's used across most/all of my forms into <Container>?
+ * - extract <div> that's used across most/all of my forms into <Container>?
  *
  * - rpc requests page
  * - contract reader page

@@ -20,7 +20,9 @@ export default function Page() {
 
     try {
       const [address] = await Promise.all([
-        client.getEnsAddress({ name: ensName }).catch(() => null),
+        client
+          .getEnsAddress({ name: ensName.toLocaleLowerCase() })
+          .catch(() => null),
       ]);
 
       setResolvedAddress(address);

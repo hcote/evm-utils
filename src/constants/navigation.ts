@@ -1,5 +1,6 @@
 import IcoCompute from "@/icons/IcoCompute";
 import IcoContractReader from "@/icons/IcoContractReader";
+import IcoDataDecoder from "@/icons/IcoDataDecoder";
 import IcoDecoder from "@/icons/IcoDecoder";
 import IcoENS from "@/icons/IcoENS";
 import IcoKeyGen from "@/icons/IcoKeyGen";
@@ -7,7 +8,7 @@ import IcoMetadata from "@/icons/IcoMetadata";
 import IcoRpcRequest from "@/icons/IcoRpcRequest";
 import IcoUnits from "@/icons/IcoUnits";
 
-interface Navigation {
+export interface Navigation {
   name: string;
   path: string;
   description: string;
@@ -37,18 +38,18 @@ export const NAVIGATION: Navigation[] = [
     description: "Decode a raw EVM transaction to view its contents.",
     Icon: IcoDecoder,
   },
-  {
-    name: "JSON RPC Methods",
-    path: "/rpc-requests",
-    description: "Interact with Ethereum nodes using JSON RPC methods.",
-    Icon: IcoRpcRequest,
-  },
-  {
-    name: "Contract Reader",
-    path: "/contract-reader",
-    description: "Read data from any Ethereum smart contract.",
-    Icon: IcoContractReader,
-  },
+  // {
+  //   name: "JSON RPC Methods",
+  //   path: "/rpc-requests",
+  //   description: "Interact with Ethereum nodes using JSON RPC methods.",
+  //   Icon: IcoRpcRequest,
+  // },
+  // {
+  //   name: "Contract Reader",
+  //   path: "/contract-reader",
+  //   description: "Read data from any Ethereum smart contract.",
+  //   Icon: IcoContractReader,
+  // },
   {
     name: "NFT Metadata",
     path: "/nft",
@@ -66,6 +67,12 @@ export const NAVIGATION: Navigation[] = [
     path: "/compute-address",
     description: "Calculate the address of a contract from a deployer address.",
     Icon: IcoCompute
+  },
+  {
+    name: "Data Decoder",
+    path: "/data-decoder",
+    description: "Make transaction data readable format.",
+    Icon: IcoDataDecoder
   },
 ];
 

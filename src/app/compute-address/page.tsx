@@ -1,5 +1,9 @@
 "use client";
 
+import Button from "@/ui/Button";
+import Container from "@/ui/Container";
+import ResultDisplay from "@/ui/ResultDisplay";
+import TextInput from "@/ui/TextInput";
 import { useState } from "react";
 import { isAddress, getContractAddress } from "viem/utils";
 
@@ -37,48 +41,48 @@ export default function Page() {
     }
   };
 
+  // TODO: support prefix, contains, suffix for generated contract address
   return (
-    <div className="flex items-center justify-center px-4">
-      <div className="p-6 rounded-lg shadow-md w-full max-w-md space-y-4">
-        <h1 className="text-xl font-semibold">Contract Address Generator</h1>
+    <Container>
+      {/* Form Card */}
+      <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
+        {/* Wallet Address */}
+        <TextInput
+          placeholder="Wallet address (0x...)"
+          value={walletAddress}
+          onChange={(e) => setWalletAddress(e.target.value)}
+        />
 
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Wallet Address</label>
-          <input
-            type="text"
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="0x..."
-            value={walletAddress}
-            onChange={(e) => setWalletAddress(e.target.value)}
-          />
-        </div>
+        {/* Nonce */}
+        <TextInput
+          placeholder="Nonce (e.g., 0)"
+          value={nonce}
+          onChange={(e) => setNonce(e.target.value)}
+        />
 
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Nonce</label>
-          <input
-            type="text"
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g., 0"
-            value={nonce}
-            onChange={(e) => setNonce(e.target.value)}
-          />
-        </div>
-
-        <button
+        {/* Generate Button */}
+        <Button
+          expand
+          label="Generate Address"
           onClick={handleGenerate}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-        >
-          Generate Address
-        </button>
+          disabled={!walletAddress || !nonce}
+        />
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-
-        {contractAddress && (
-          <div className="p-3 rounded text-sm break-words">
-            <strong>Contract Address:</strong> {contractAddress}
-          </div>
-        )}
+        {error && <p className="text-sm text-red-400 pt-2">{error}</p>}
       </div>
-    </div>
+
+      {/* Result */}
+      {contractAddress && (
+        <ResultDisplay
+          items={[
+            {
+              header: "Contract Address:",
+              text: contractAddress,
+              className: "font-mono break-words",
+            },
+          ]}
+        />
+      )}
+    </Container>
   );
 }

@@ -4,40 +4,47 @@ import erc20Abi from "@/abis/erc20";
 import erc721Abi from "@/abis/erc721";
 import { jsonStringifyBigInt } from "@/utils/jsonStringifyBigInt";
 import { useState } from "react";
-import { Abi, AbiFunction, createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-
-const client = createPublicClient({
-  chain: mainnet,
-  transport: http(),
-});
+import { Abi, AbiFunction, isAddress } from "viem";
+import { getPublicClient } from "@/utils/viemPublicClient";
+import Container from "@/ui/Container";
+import Button from "@/ui/Button";
+import TextInput from "@/ui/TextInput";
+import TextArea from "@/ui/TextArea";
+import { NETWORKS } from "@/constants/networks";
+import DropdownMenu from "@/ui/DropdownMenu";
 
 const presetAbis: Record<string, Abi> = {
   ERC20: erc20Abi as Abi,
   ERC721: erc721Abi as Abi,
 };
 
-/**
- * TODO: Before fetching the methods, ensure it follows that interface
- * i.e. I can successfully call loadABI on a erc20 token address
- * when I have erc721 abi loaded
- */
+const ABI_OPTIONS = [
+  { id: "ERC20", name: "ERC20" },
+  { id: "ERC721", name: "ERC721" },
+  { id: "Custom", name: "Custom" },
+];
+
 export default function Page() {
   const [contractAddress, setContractAddress] = useState("");
-  const [abiOption, setAbiOption] = useState("ERC20");
+  const [abiOption, setAbiOption] = useState(ABI_OPTIONS[0]);
   const [abiJson, setAbiJson] = useState("");
   const [abiFunctions, setAbiFunctions] = useState<AbiFunction[]>([]);
   const [inputs, setInputs] = useState<Record<string, string[]>>({});
   const [results, setResults] = useState<Record<string, any>>({});
   const [error, setError] = useState("");
 
+  const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
+  const [client, setClient] = useState(() =>
+    getPublicClient(NETWORKS[0].chain)
+  );
+
   const handleLoadAbi = () => {
     try {
       let abi: Abi;
-      if (abiOption === "Custom") {
+      if (abiOption.id === "Custom") {
         abi = JSON.parse(abiJson);
       } else {
-        abi = presetAbis[abiOption];
+        abi = presetAbis[abiOption.id];
       }
       const viewFns = abi.filter(
         (fn: any) =>
@@ -78,83 +85,148 @@ export default function Page() {
     }
   };
 
-  return (
-    <div className="text-white p-6">
-      <h1 className="text-2xl font-bold mb-4">Contract Reader</h1>
+  const handleTest = async () => {
+    try {
+      const testNetwork = NETWORKS.find((n) => n.chain.id === 1); // Mainnet
+      if (!testNetwork) throw new Error("Mainnet not found in network list");
 
-      <div className="space-y-4 mb-6">
-        <input
-          type="text"
-          placeholder="Enter contract address"
-          className="w-full p-2 bg-gray-800 border border-gray-700 rounded"
+      const testClient = getPublicClient(testNetwork.chain);
+      const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+      const abi = presetAbis.ERC20;
+
+      const viewFns = abi.filter(
+        (fn: any) =>
+          fn.type === "function" &&
+          (fn.stateMutability === "view" || fn.stateMutability === "pure")
+      ) as AbiFunction[];
+
+      const resultsMap: Record<string, any> = {};
+      for (const fn of viewFns) {
+        if (fn.inputs.length === 0) {
+          try {
+            const result = await testClient.readContract({
+              address: usdcAddress,
+              abi: [fn],
+              functionName: fn.name,
+            });
+            resultsMap[fn.name] = result;
+          } catch (err: any) {
+            resultsMap[fn.name] = `Error: ${err.message}`;
+          }
+        }
+      }
+
+      setAbiFunctions(viewFns);
+      setResults(resultsMap);
+      setError("");
+    } catch (err: any) {
+      setError(err.message || "Error running test");
+    }
+  };
+
+  const isInputEmpty = !contractAddress;
+
+  return (
+    <Container size="lg" className="space-y-6">
+      {/* Network Dropdown */}
+      <div className="flex justify-end">
+        <DropdownMenu
+          selected={selectedNetwork}
+          options={NETWORKS}
+          onSelect={(network) => {
+            setSelectedNetwork(network);
+            setClient(getPublicClient(network.chain));
+          }}
+        />
+      </div>
+
+      {/* Form Card */}
+      <div className="bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4">
+        <TextInput
+          placeholder="Contract Address"
           value={contractAddress}
           onChange={(e) => setContractAddress(e.target.value)}
         />
 
-        <select
-          value={abiOption}
-          onChange={(e) => setAbiOption(e.target.value)}
-          className="w-full p-2 bg-gray-800 border border-gray-700 rounded"
-        >
-          <option value="ERC20">ERC20</option>
-          <option value="ERC721">ERC721</option>
-          <option value="Custom">Other (Paste ABI)</option>
-        </select>
+        {/* ABI Dropdown */}
+        <DropdownMenu
+          selected={abiOption}
+          options={ABI_OPTIONS}
+          onSelect={setAbiOption}
+          buttonClassName="w-full"
+          dropdownClassName="w-full"
+          dropdownItemClassName="w-full"
+        />
 
-        {abiOption === "Custom" && (
-          <textarea
-            placeholder="Paste ABI JSON here"
-            className="w-full h-40 p-2 bg-gray-800 border border-gray-700 rounded"
+        {abiOption.id === "Custom" && (
+          <TextArea
+            placeholder="Paste ABI JSON"
             value={abiJson}
             onChange={(e) => setAbiJson(e.target.value)}
           />
         )}
 
-        <button
-          onClick={handleLoadAbi}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Load ABI
-        </button>
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Button
+            expand
+            label="Load Contract"
+            onClick={handleLoadAbi}
+            disabled={!isAddress(contractAddress)}
+          />
 
-        {error && <p className="text-red-400">{error}</p>}
+          {isInputEmpty && (
+            <>
+              <span className="text-sm font-semibold text-[var(--color-text-secondary)]">
+                OR
+              </span>
+              <Button
+                label="Test it out"
+                onClick={handleTest}
+                variant="inverse"
+                expand
+              />
+            </>
+          )}
+        </div>
+
+        {error && <p className="text-sm text-red-400 pt-2">{error}</p>}
       </div>
 
-      <div className="space-y-6">
-        {abiFunctions.map((fn) => (
-          <div key={fn.name} className="border border-gray-700 p-4 rounded">
-            <h2 className="text-lg font-semibold">{fn.name}</h2>
-            <div className="flex flex-col gap-2 mt-2">
+      {/* Functions Section */}
+      {abiFunctions.length > 0 && (
+        <div className="space-y-6">
+          {abiFunctions.map((fn) => (
+            <div
+              key={fn.name}
+              className="px-8 py-6 bg-[var(--color-surface)] text-[var(--color-text-primary)] rounded-2xl shadow-lg border border-[var(--color-surface)] space-y-4"
+            >
+              <h2 className="text-lg font-semibold">{fn.name}</h2>
+
               {fn.inputs.map((input, index) => (
-                <input
+                <TextInput
                   key={index}
-                  type="text"
                   placeholder={`${input.name || "arg" + index} (${input.type})`}
-                  className="p-2 bg-gray-800 border border-gray-700 rounded"
                   value={inputs[fn.name]?.[index] || ""}
                   onChange={(e) =>
                     handleInputChange(fn.name, index, e.target.value)
                   }
                 />
               ))}
-              <button
+
+              <Button
+                label={`Call ${fn.name}`}
                 onClick={() => callFunction(fn)}
-                className="bg-green-600 px-3 py-1 mt-2 rounded hover:bg-green-700 w-fit"
-              >
-                Call {fn.name}
-              </button>
+              />
+
               {results[fn.name] !== undefined && (
-                <div className="mt-2 text-sm text-gray-300">
-                  Result:{" "}
-                  <span className="break-words">
-                    {jsonStringifyBigInt(results[fn.name])}
-                  </span>
+                <div className="mt-2 text-sm text-[var(--color-text-secondary)] whitespace-pre-wrap break-all">
+                  Result: {jsonStringifyBigInt(results[fn.name])}
                 </div>
               )}
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      )}
+    </Container>
   );
 }

@@ -8,7 +8,7 @@ export default function EthPrice() {
   const { data: priceUSD } = useEthPrice();
 
   return priceUSD ? (
-    <div className="flex gap-1 items-center text-[#aaa5a5]">
+    <div className="flex gap-1 items-center text-[var(--color-text-secondary)]">
       <IcoEthereum size={20} />${formatUSD(priceUSD)}
     </div>
   ) : null;

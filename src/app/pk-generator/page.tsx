@@ -7,6 +7,10 @@ import {
   mnemonicToAccount,
 } from "viem/accounts";
 import * as bip39 from "bip39";
+import Container from "@/ui/Container";
+import Button from "@/ui/Button";
+import TextInput from "@/ui/TextInput";
+import ResultDisplay, { ResultItem } from "@/ui/ResultDisplay";
 
 export default function Page() {
   const [privateKey, setPrivateKey] = useState<string | null>(null);
@@ -14,9 +18,9 @@ export default function Page() {
   const [address, setAddress] = useState<string | null>(null);
   const [prefix, setPrefix] = useState("");
   const [suffix, setSuffix] = useState("");
+  const [contains, setContains] = useState("");
   const [useSeedPhrase, setUseSeedPhrase] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [contains, setContains] = useState("");
   const abortRef = useRef({ abort: false });
   const [generatedType, setGeneratedType] = useState<
     "mnemonic" | "privateKey" | null
@@ -43,17 +47,15 @@ export default function Page() {
 
   const generateVanityAddress = async (timeoutMs = 5000) => {
     setLoading(true);
-    setPrivateKey(null);
-    setMnemonic(null);
-    setAddress(null);
     abortRef.current.abort = false;
     const startTime = Date.now();
 
     setTimeout(async () => {
       const batchSize = 100;
+      let foundMatch = false;
+
       while (Date.now() - startTime < timeoutMs) {
         if (abortRef.current.abort) break;
-        let createdMatch = false;
 
         for (let i = 0; i < batchSize; i++) {
           if (useSeedPhrase) {
@@ -61,10 +63,11 @@ export default function Page() {
             const account = await mnemonicToAccount(m);
             if (matchesVanity(account.address, prefix, suffix, contains)) {
               setMnemonic(m);
+              setPrivateKey(null);
               setAddress(account.address);
               setGeneratedType("mnemonic");
               setGeneratedHighlight({ prefix, suffix, contains });
-              createdMatch = true;
+              foundMatch = true;
               break;
             }
           } else {
@@ -72,16 +75,17 @@ export default function Page() {
             const account = privateKeyToAccount(pk);
             if (matchesVanity(account.address, prefix, suffix, contains)) {
               setPrivateKey(pk);
+              setMnemonic(null);
               setAddress(account.address);
               setGeneratedType("privateKey");
               setGeneratedHighlight({ prefix, suffix, contains });
-              createdMatch = true;
+              foundMatch = true;
               break;
             }
           }
         }
 
-        if (createdMatch) {
+        if (foundMatch) {
           setLoading(false);
           return;
         }
@@ -110,7 +114,7 @@ export default function Page() {
 
     if (p && lower.startsWith(`0x${p}`)) {
       matches.push(
-        <span key="prefix" className="text-[var(--color-accent)] font-semibold">
+        <span key="prefix" className="text-[#889cff] font-semibold">
           {address.slice(0, 2 + p.length)}
         </span>
       );
@@ -125,7 +129,7 @@ export default function Page() {
         );
       }
       matches.push(
-        <span key="contains" className="text-yellow-400 font-semibold">
+        <span key="contains" className="text-red-400 font-semibold">
           {address.slice(containsIndex, containsIndex + c.length)}
         </span>
       );
@@ -146,92 +150,140 @@ export default function Page() {
       );
     }
 
-    return <>{matches}</>;
+    return <span className="font-mono">{matches}</span>;
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6">
-      <div className="flex flex-col gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Starts with"
-          value={prefix}
-          onChange={(e) =>
-            setPrefix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+    <Container>
+      <div className="relative space-y-3">
+        {/* Inputs */}
+        <div className="space-y-1">
+          <TextInput
+            id="prefix"
+            label="Starts with"
+            type="text"
+            placeholder="Starts with"
+            value={prefix}
+            onChange={(e) =>
+              setPrefix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+            }
+          />
+        </div>
+
+        <div className="space-y-1">
+          <TextInput
+            id="contains"
+            label="Contains"
+            placeholder="Contains"
+            value={contains}
+            onChange={(e) =>
+              setContains(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+            }
+          />
+        </div>
+
+        <div className="space-y-1">
+          <TextInput
+            id="suffix"
+            label="Ends with"
+            placeholder="Ends with"
+            value={suffix}
+            onChange={(e) =>
+              setSuffix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
+            }
+          />
+        </div>
+
+        {/* ✅ Subtle helper text under the inputs */}
+      </div>
+
+      {/* <p className="text-xs text-[var(--color-text-secondary)]">
+        Inputs are optional. They apply to the generated address only (not the
+        private key or seed phrase).
+      </p> */}
+
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <input
+            id="useSeedPhrase"
+            type="checkbox"
+            checked={useSeedPhrase}
+            onChange={() => setUseSeedPhrase((v) => !v)}
+            className="accent-[var(--color-accent)] cursor-pointer"
+          />
+          <label
+            htmlFor="useSeedPhrase"
+            className=" cursor-pointer text-sm text-[var(--color-text-secondary)]"
+          >
+            Generate Seed Phrase
+          </label>
+        </div>
+
+        <Button
+          label="Clear Form"
+          variant="inverse"
+          size="sm"
+          onClick={() => {
+            setPrefix("");
+            setSuffix("");
+            setContains("");
+          }}
+          className={
+            prefix || suffix || contains
+              ? "opacity-100 visible pointer-events-auto"
+              : "opacity-0 invisible pointer-events-none"
           }
-          className="bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-lg placeholder-[var(--color-text-secondary)] focus:outline-none"
-        />
-        <input
-          type="text"
-          placeholder="Contains"
-          value={contains}
-          onChange={(e) =>
-            setContains(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
-          }
-          className="bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-lg placeholder-[var(--color-text-secondary)] focus:outline-none"
-        />
-        <input
-          type="text"
-          placeholder="Ends with"
-          value={suffix}
-          onChange={(e) =>
-            setSuffix(e.target.value.replace(/[^0-9a-fA-F]/g, ""))
-          }
-          className="bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-lg placeholder-[var(--color-text-secondary)] focus:outline-none"
         />
       </div>
 
-      <label className="flex items-center gap-2 mb-6 text-[var(--color-text-secondary)]">
-        <input
-          type="checkbox"
-          checked={useSeedPhrase}
-          onChange={() => setUseSeedPhrase((v) => !v)}
-        />
-        Generate Seed Phrase
-      </label>
-
-      <button
+      <Button
+        label={
+          loading
+            ? "Generating..."
+            : `Generate ${useSeedPhrase ? "Seed Phrase" : "Private Key"}`
+        }
         onClick={() => {
-          abortRef.current.abort = true;
-          setTimeout(() => generateVanityAddress(), 50);
+          abortRef.current.abort = true; // cancel old generation
+          setTimeout(() => {
+            abortRef.current.abort = false;
+            generateVanityAddress();
+          }, 50); // allow 50ms delay
         }}
+        expand
         disabled={loading}
-        className="bg-[var(--color-accent)] cursor-pointer text-black font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {loading
-          ? "Generating..."
-          : `Generate ${useSeedPhrase ? "Seed Phrase" : "Private Key"}`}
-      </button>
-
+      />
       {address && (
-        <div className="mt-8 w-full max-w-xl bg-[var(--color-surface)] p-5 rounded-xl space-y-4 text-[var(--color-text-primary)]">
-          {generatedType === "mnemonic" && (
-            <div>
-              <h2 className="text-lg font-semibold">Seed Phrase</h2>
-              <p className="break-words text-sm text-[var(--color-accent)]">
-                {mnemonic}
-              </p>
-            </div>
-          )}
-          {generatedType === "privateKey" && (
-            <div>
-              <h2 className="text-lg font-semibold">Private Key</h2>
-              <p className="break-all text-sm text-green-400">{privateKey}</p>
-            </div>
-          )}
-          <div>
-            <h2 className="text-lg font-semibold">ETH Address</h2>
-            <p className="break-all text-sm">
-              {highlightAddressParts(
-                address,
-                generatedHighlight.prefix,
-                generatedHighlight.suffix,
-                generatedHighlight.contains
-              )}
-            </p>
-          </div>
-        </div>
+        <ResultDisplay
+          items={
+            [
+              generatedType === "mnemonic" && mnemonic
+                ? {
+                    header: "Seed Phrase",
+                    text: mnemonic,
+                    className: "text-[#939699]",
+                  }
+                : null,
+              generatedType === "privateKey" && privateKey
+                ? {
+                    header: "Private Key",
+                    text: privateKey,
+                    className: "text-[#939699]",
+                  }
+                : null,
+              {
+                header: "ETH Address",
+                text: highlightAddressParts(
+                  address,
+                  generatedHighlight.prefix,
+                  generatedHighlight.suffix,
+                  generatedHighlight.contains
+                ),
+                className: "break-all",
+              },
+            ].filter(Boolean) as ResultItem[]
+          }
+        />
       )}
-    </div>
+    </Container>
   );
 }

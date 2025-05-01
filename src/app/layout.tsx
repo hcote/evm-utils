@@ -33,6 +33,7 @@ interface RootLayoutProps {
  * - google analytics
  * - about tab?
  * - hamburger menu for mobile?
+ * - metadata image
  *
  * - rpc requests page
  * - contract reader page

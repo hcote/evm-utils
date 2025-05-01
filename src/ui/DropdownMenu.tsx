@@ -48,11 +48,7 @@ export default function DropdownMenu({
     <div className={`relative ${dropdownClassName}`} ref={ref}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className={`cursor-pointer px-4 py-2 text-sm rounded-md transition border border-white/10 hover:bg-[var(--color-btn-hover)] flex justify-center items-center gap-2 ${buttonClassName}`}
-        style={{
-          backgroundColor: "var(--color-surface)",
-          color: "var(--color-text-primary)",
-        }}
+        className={`cursor-pointer bg-[var(--color-surface)] text-[var(--color-text-primary)] px-4 py-2 text-sm rounded-md transition border border-white/10 hover:bg-[var(--color-btn-hover)] flex justify-center items-center gap-2 ${buttonClassName}`}
         aria-haspopup="menu"
         aria-expanded={open}
       >
@@ -68,13 +64,7 @@ export default function DropdownMenu({
       </button>
 
       {open && (
-        <div
-          className="absolute top-full mt-2 right-0 w-72 rounded-md shadow-xl z-50 border border-white/10"
-          style={{
-            backgroundColor: "var(--color-surface)",
-            color: "var(--color-text-primary)",
-          }}
-        >
+        <div className="absolute bg-[var(--color-surface)] text-[var(--color-text-primary)] top-full mt-2 right-0 w-72 rounded-md shadow-xl z-50 border border-white/10">
           <ul role="menu" className="max-h-100 overflow-y-auto space-y-0.5">
             {options.map((option, i) => {
               const isSelected = option.name === selected.name;
@@ -90,8 +80,8 @@ export default function DropdownMenu({
                       dropdownItemClassName ?? ""
                     } ${
                       isSelected
-                        ? "bg-[rgba(255,255,255,0.1)] font-medium"
-                        : "hover:bg-[rgba(255,255,255,0.1)]"
+                        ? "bg-[var(--color-btn-hover)] font-medium"
+                        : "hover:bg-[var(--color-btn-hover)]"
                     }`}
                   >
                     {option.Icon && (

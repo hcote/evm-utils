@@ -6,24 +6,6 @@ const config: Config = {
     './components/**/*.{ts,tsx}',
     './pages/**/*.{ts,tsx}',
   ],
-  darkMode: 'class',
-  theme: {
-    extend: {
-      colors: {
-        bg: {
-          DEFAULT: '#121212',
-          surface: '#232323',
-        },
-        text: {
-          primary: '#E5E5E5',
-          secondary: '#9CA3AF',
-        },
-        accent: {
-          DEFAULT: '#6EE7B7',
-        },
-      },
-    },
-  },
   plugins: [],
 };
 

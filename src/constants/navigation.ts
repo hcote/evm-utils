@@ -59,7 +59,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "ENS Lookup",
     path: "/ens",
-    description: "Resolve Ethereum Name Service domains to addresses and vice versa.",
+    description: "Resolve Ethereum Name Service domains to addresses.",
     Icon: IcoENS
   },
   {

@@ -190,8 +190,8 @@ export default function Page() {
       </div>
 
       <TextInput
-        label="Wallet Address"
-        placeholder="Wallet address"
+        label="Deployer Address"
+        placeholder="Deployer address"
         value={walletAddress}
         onChange={(e) => setWalletAddress(e.target.value)}
       />

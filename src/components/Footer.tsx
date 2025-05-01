@@ -30,7 +30,7 @@ export default function Footer() {
         </div>
 
         <div className="flex-1 text-sm md:text-right text-center">
-          © {year} EVM Utils
+          © {year} EVM Utils by Hunter Cote
         </div>
       </div>
     </footer>

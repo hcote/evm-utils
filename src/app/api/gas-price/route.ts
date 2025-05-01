@@ -13,7 +13,7 @@ export async function GET() {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=30, stale-while-revalidate=15',
+        'Cache-Control': 's-maxage=300, stale-while-revalidate=30' // 5 minutes
       },
     }
   );

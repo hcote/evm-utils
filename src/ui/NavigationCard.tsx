@@ -28,7 +28,7 @@ export default function NavigationCard({ nav }: NavigationCardProps) {
       tabIndex={0}
       onClick={() => handleNavigate(nav.path)}
       onKeyDown={handleKeyDown}
-      className="group transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:brightness-120 bg-[var(--color-surface)] border border-white/10 rounded-2xl p-6 cursor-pointer flex flex-col gap-4 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+      className="group transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:bg-[var(--color-btn-hover)] bg-[var(--color-surface)] border border-white/10 rounded-2xl p-6 cursor-pointer flex flex-col gap-4 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
     >
       <div className="flex items-center gap-4">
         <div className="p-2 rounded-full bg-[var(--color-bg)] transition">

@@ -48,7 +48,7 @@ export default function Page() {
       >
         <TextInput
           label="ENS Name"
-          placeholder="Enter ENS name (e.g. vitalik.eth)"
+          placeholder="ENS name (vitalik.eth)"
           value={ensName}
           onChange={(e) => setEnsName(e.target.value)}
         />

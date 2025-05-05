@@ -1,23 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "./providers";
-import "./globals.css";
 import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import SubPageHeader from "@/components/SubPageHeader";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EVM Utils",
+  title: {
+    default: "EVM Utils",
+    template: "%s | EVM Utils",
+  },
   description: "Helper functions for Ethereum developers",
 };
 
@@ -25,25 +20,11 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-/**
- * TODO:
- * - code cleanup...
- * - consider placing forms + ResultDisplay side by side for wider screens?
- * - SEO
- * - google analytics
- * - about tab?
- * - hamburger menu for mobile?
- * - metadata image
- *
- * - rpc requests page
- * - contract reader page
- */
-
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body
-        className={`relative min-h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} antialiased text-[var(--color-text-primary)]`}
+        className={`${inter.className} relative min-h-screen flex flex-col antialiased text-[var(--color-text-primary)]`}
       >
         <Providers>
           <TopNav />

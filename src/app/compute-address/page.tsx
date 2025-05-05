@@ -175,20 +175,6 @@ export default function Page() {
 
   return (
     <Container>
-      <div className="mb-4 flex items-center justify-between">
-        <label className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-          <input
-            type="checkbox"
-            checked={searchMode === "search"}
-            onChange={() =>
-              setSearchMode((prev) => (prev === "single" ? "search" : "single"))
-            }
-            className="accent-[var(--color-bg)]"
-          />
-          Search for vanity contract address
-        </label>
-      </div>
-
       <TextInput
         label="Deployer Address"
         placeholder="Deployer address"
@@ -241,6 +227,41 @@ export default function Page() {
           />
         </div>
       )}
+
+      <div className="mb-4 flex items-center justify-between">
+        <label className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+          <input
+            type="checkbox"
+            checked={searchMode === "search"}
+            onChange={() =>
+              setSearchMode((prev) => (prev === "single" ? "search" : "single"))
+            }
+            className="accent-[var(--color-bg)]"
+          />
+          Search for vanity contract address
+        </label>
+        <Button
+          label="Clear Form"
+          variant="inverse"
+          size="sm"
+          onClick={() => {
+            setPrefix("");
+            setSuffix("");
+            setContains("");
+            setStartingNonce("0");
+            setWalletAddress("");
+          }}
+          className={
+            prefix ||
+            suffix ||
+            contains ||
+            (startingNonce && startingNonce !== "0") ||
+            walletAddress
+              ? "opacity-100 visible pointer-events-auto"
+              : "opacity-0 invisible pointer-events-none"
+          }
+        />
+      </div>
 
       <div className="mt-4">
         <Button

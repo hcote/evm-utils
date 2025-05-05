@@ -4,6 +4,7 @@ import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import SubPageHeader from "@/components/SubPageHeader";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className="max-w-[1200px] mx-auto w-full">
               <SubPageHeader />
               {children}
+              <Analytics />
             </div>
           </main>
           <Footer />

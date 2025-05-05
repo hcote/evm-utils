@@ -5,7 +5,9 @@ import Footer from "@/components/Footer";
 import SubPageHeader from "@/components/SubPageHeader";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script"; // ✅ Add this import
 import "./globals.css";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +26,9 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body
         className={`${inter.className} relative min-h-screen flex flex-col antialiased text-[var(--color-text-primary)]`}
       >

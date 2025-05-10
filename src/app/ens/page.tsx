@@ -1,37 +1,43 @@
 "use client";
 
+import { useState } from "react";
+import { isAddress } from "viem/utils";
 import Button from "@/ui/Button";
 import Container from "@/ui/Container";
 import ResultDisplay from "@/ui/ResultDisplay";
 import TextInput from "@/ui/TextInput";
 import { client } from "@/utils/viemPublicClient";
-import { useState } from "react";
 
 export default function Page() {
-  const [ensName, setEnsName] = useState("");
-  const [resolvedAddress, setResolvedAddress] = useState<string | null>(null);
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState<{
+    type: "ens" | "address";
+    value: string;
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleResolve = async () => {
+  const handleLookup = async () => {
     setError("");
-    setResolvedAddress(null);
+    setResult(null);
     setIsLoading(true);
 
     try {
-      const [address] = await Promise.all([
-        client
-          .getEnsAddress({ name: ensName.toLocaleLowerCase() })
-          .catch(() => null),
-      ]);
-
-      setResolvedAddress(address);
-
-      if (!address) {
-        throw new Error("ENS name not found.");
+      if (isAddress(input)) {
+        const ensName = await client.getEnsName({ address: input });
+        if (!ensName) throw new Error("No ENS name found for this address.");
+        setResult({ type: "address", value: ensName });
+      } else if (input.toLowerCase().endsWith(".eth")) {
+        const address = await client.getEnsAddress({
+          name: input.toLowerCase(),
+        });
+        if (!address) throw new Error("ENS name not found.");
+        setResult({ type: "ens", value: address });
+      } else {
+        throw new Error("Enter a valid ENS name or Ethereum address.");
       }
     } catch (err: any) {
-      setError(err.message || "Failed to resolve ENS name.");
+      setError(err.message || "Failed to resolve.");
     } finally {
       setIsLoading(false);
     }
@@ -42,21 +48,21 @@ export default function Page() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleResolve();
+          handleLookup();
         }}
         className="space-y-4"
       >
         <TextInput
-          label="ENS Name"
-          placeholder="ENS name (vitalik.eth)"
-          value={ensName}
-          onChange={(e) => setEnsName(e.target.value)}
+          label="ENS or Address"
+          placeholder="ENS name or Address"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
 
         <Button
           label={isLoading ? "Resolving..." : "Resolve"}
-          onClick={handleResolve}
-          disabled={isLoading || !ensName.includes(".eth")}
+          onClick={handleLookup}
+          disabled={isLoading || input.trim() === ""}
           expand
         />
       </form>
@@ -67,13 +73,16 @@ export default function Page() {
         </p>
       )}
 
-      {resolvedAddress && (
+      {result && (
         <ResultDisplay
           wrapPreText
           items={[
             {
-              header: "Resolved Address:",
-              text: resolvedAddress,
+              header:
+                result.type === "ens"
+                  ? "Resolved Address:"
+                  : "Resolved ENS Name:",
+              text: result.value,
               className: "font-mono break-all",
             },
           ]}

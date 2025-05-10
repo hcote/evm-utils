@@ -22,6 +22,7 @@ export default function Page() {
   const [tokenId, setTokenId] = useState("");
   const [loading, setLoading] = useState(false);
   const [metadata, setMetadata] = useState<any>(null);
+  const [tokenURI, setTokenURI] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
@@ -37,19 +38,22 @@ export default function Page() {
     setLoading(true);
     setError("");
     setMetadata(null);
+    setTokenURI(null);
 
     try {
       if (!isAddress(addr)) throw new Error("Invalid address");
       if (!id) throw new Error("Token ID is required");
 
-      const tokenURI = await overrideClient.readContract({
+      const uri = await overrideClient.readContract({
         address: addr as `0x${string}`,
         abi: erc721Abi,
         functionName: "tokenURI",
         args: [BigInt(id)],
       });
 
-      const resolvedURI = resolveIPFS(tokenURI);
+      setTokenURI(uri);
+
+      const resolvedURI = resolveIPFS(uri);
       const res = await fetch(resolvedURI);
       if (!res.ok) throw new Error("Failed to fetch metadata from URI");
 
@@ -110,7 +114,7 @@ export default function Page() {
 
         {isInputEmpty && (
           <>
-            <span className="text-sm font-semibold text-[var(--color-text-secondary)]">
+            <span className="text-sm font-normal text-[var(--color-text-secondary)]">
               OR
             </span>
             <Button
@@ -141,6 +145,11 @@ export default function Page() {
           )}
           <ResultDisplay
             items={[
+              {
+                header: "tokenURI:",
+                text: tokenURI || "",
+                className: "text-sm leading-relaxed",
+              },
               {
                 header: "Metadata:",
                 text: JSON.stringify(metadata, null, 2),

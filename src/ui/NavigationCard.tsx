@@ -37,7 +37,7 @@ export default function NavigationCard({ nav }: NavigationCardProps) {
         <h2 className="text-xl font-semibold">{nav.name}</h2>
       </div>
       <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-        {nav.description}
+        {nav.shortDesc}
       </p>
     </div>
   );

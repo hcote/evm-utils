@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalyticScript from "@/components/GoogleAnalyticsScript";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
+import AboutPageDropdown from "@/components/AboutPageDropdown";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <main className="flex-1 mt-14 py-16 px-5">
             <div className="max-w-[1200px] mx-auto w-full">
               <SubPageHeader />
+              <AboutPageDropdown />
               {children}
               <Analytics />
             </div>

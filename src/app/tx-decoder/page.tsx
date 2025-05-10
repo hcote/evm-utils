@@ -59,7 +59,7 @@ export default function Page() {
 
         {!rawTx && (
           <>
-            <span className="text-sm font-semibold text-[var(--color-text-secondary)]">
+            <span className="text-sm font-normal text-[var(--color-text-secondary)]">
               OR
             </span>
             <Button

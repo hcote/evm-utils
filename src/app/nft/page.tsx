@@ -8,7 +8,6 @@ import {
   client as mainnetClient,
   getPublicClient,
 } from "@/utils/viemPublicClient";
-
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
 import TextInput from "@/ui/TextInput";
@@ -19,17 +18,23 @@ import ResultDisplay from "@/ui/ResultDisplay";
 import IcoChevronDown from "@/icons/IcoChevronDown";
 
 export default function Page() {
+  const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
+
   const [address, setAddress] = useState("");
   const [tokenId, setTokenId] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [metadata, setMetadata] = useState<any>(null);
   const [tokenURI, setTokenURI] = useState<string | null>(null);
+  const [metadata, setMetadata] = useState<any>(null);
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [openImage, setOpenImage] = useState(false);
-  const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
+
   const [client, setClient] = useState(() =>
     getPublicClient(NETWORKS[0].chain)
   );
+
+  const isInputEmpty = !address && !tokenId;
 
   const fetchMetadata = async (
     addr = address,
@@ -38,8 +43,6 @@ export default function Page() {
   ) => {
     setLoading(true);
     setError("");
-    setMetadata(null);
-    setTokenURI(null);
 
     try {
       if (!isAddress(addr)) throw new Error("Invalid address");
@@ -57,7 +60,6 @@ export default function Page() {
       const resolvedURI = resolveIPFS(uri);
       const res = await fetch(resolvedURI);
       if (!res.ok) throw new Error("Failed to fetch metadata from URI");
-
       const data = await res.json();
       setMetadata(data);
     } catch (err: any) {
@@ -73,10 +75,8 @@ export default function Page() {
     await fetchMetadata(testAddress, testTokenId, mainnetClient);
   };
 
-  const isInputEmpty = !address && !tokenId;
-
   return (
-    <Container className="space-y-6">
+    <Container>
       <div className="flex justify-end">
         <DropdownMenu
           selected={selectedNetwork}

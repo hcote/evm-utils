@@ -37,3 +37,26 @@ Make transaction data human-readable.
 - An interface to send JSON rpc requests to popular EVM chains
 - Ability to load and query any smart contract
 - Explainer on EVM network fees, what makes them up and how they are calculated
+
+.
+├── public
+└── src
+    ├── abis
+    ├── app
+    │   ├── api
+    │   │   ├── eth-price
+    │   │   └── gas-price
+    │   ├── compute-address
+    │   ├── data-decoder
+    │   ├── ens
+    │   ├── nft
+    │   ├── pk-generator
+    │   ├── tx-decoder
+    │   └── unit-converter
+    ├── components
+    ├── constants
+    ├── contexts
+    ├── hooks
+    ├── icons
+    ├── ui
+    └── utils

@@ -16,6 +16,7 @@ import Image from "next/image";
 import { NETWORKS } from "@/constants/networks";
 import DropdownMenu from "@/ui/DropdownMenu";
 import ResultDisplay from "@/ui/ResultDisplay";
+import IcoChevronDown from "@/icons/IcoChevronDown";
 
 export default function Page() {
   const [address, setAddress] = useState("");
@@ -24,7 +25,7 @@ export default function Page() {
   const [metadata, setMetadata] = useState<any>(null);
   const [tokenURI, setTokenURI] = useState<string | null>(null);
   const [error, setError] = useState("");
-
+  const [openImage, setOpenImage] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
   const [client, setClient] = useState(() =>
     getPublicClient(NETWORKS[0].chain)
@@ -135,13 +136,37 @@ export default function Page() {
       {metadata && (
         <>
           {metadata.image && (
-            <Image
-              src={resolveIPFS(metadata.image)}
-              alt="NFT preview"
-              width={160}
-              height={160}
-              className="rounded-xl border border-[var(--color-border)] shadow mx-auto"
-            />
+            <div>
+              <button
+                onClick={() => setOpenImage((prev) => !prev)}
+                className="cursor-pointer text-sm text-[var(--color-accent)] hover:bg-[var(--color-bg)] px-3 py-3 rounded-xl transition-colors inline-flex items-center"
+              >
+                View NFT Image
+                <span
+                  className={`ml-1 transform transition-transform duration-200 ${
+                    openImage ? "rotate-180" : ""
+                  }`}
+                >
+                  <IcoChevronDown size={16} />
+                </span>
+              </button>
+
+              <div
+                className={`transition-all duration-300 ease-in-out overflow-hidden mt-2 ${
+                  openImage ? "max-h-[512px] opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="p-2">
+                  <Image
+                    src={resolveIPFS(metadata.image)}
+                    alt="NFT preview"
+                    width={160}
+                    height={160}
+                    className="rounded-xl border border-[var(--color-border)]"
+                  />
+                </div>
+              </div>
+            </div>
           )}
           <ResultDisplay
             items={[

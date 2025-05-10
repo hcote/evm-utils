@@ -9,6 +9,7 @@ import GoogleAnalyticScript from "@/components/GoogleAnalyticsScript";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 import AboutPageDropdown from "@/components/AboutPageDropdown";
+import SidebarNav from "@/components/SidebarNav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className="max-w-[1200px] mx-auto w-full">
               <SubPageHeader />
               <AboutPageDropdown />
+              <SidebarNav />
               {children}
               <Analytics />
             </div>

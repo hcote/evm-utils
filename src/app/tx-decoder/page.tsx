@@ -12,31 +12,21 @@ import { isHex } from "viem/utils";
 export default function Page() {
   const [rawTx, setRawTx] = useState("");
   const [decoded, setDecoded] = useState<any>(null);
-  const [testDecoded, setTestDecoded] = useState<any>(null);
   const [error, setError] = useState("");
 
-  const handleDecode = () => {
+  const testHex =
+    "0x02ef0182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0";
+
+  const handleDecode = (isTestData = false) => {
+    const input = isTestData ? testHex : rawTx;
     try {
       setError("");
-      setTestDecoded(null);
-      if (!isHex(rawTx)) throw new Error("Input is not a valid transaction.");
-      const tx = parseTransaction(rawTx as `0x${string}`);
+      if (!isHex(input)) throw new Error("Input is not a valid transaction.");
+      const tx = parseTransaction(input as `0x${string}`);
       setDecoded(jsonStringifyBigInt(tx));
-    } catch (err: any) {
+    } catch (err: unknown) {
       setDecoded(null);
-      setError(err.message || "Failed to decode transaction");
-    }
-  };
-
-  const handleTest = () => {
-    const testHex =
-      "0x02ef0182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0";
-    try {
-      setDecoded(null);
-      const tx = parseTransaction(testHex as `0x${string}`);
-      setTestDecoded(jsonStringifyBigInt(tx));
-    } catch (err: any) {
-      setTestDecoded({ error: err.message });
+      setError((err as Error).message || "Failed to decode transaction");
     }
   };
 
@@ -59,12 +49,12 @@ export default function Page() {
 
         {!rawTx && (
           <>
-            <span className="text-sm font-normal text-[var(--color-text-secondary)]">
+            <span className="text-sm text-[var(--color-text-secondary)]">
               OR
             </span>
             <Button
               label="Test it out"
-              onClick={handleTest}
+              onClick={() => handleDecode(true)}
               variant="inverse"
               expand
             />
@@ -76,12 +66,12 @@ export default function Page() {
         <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
       )}
 
-      {(decoded || testDecoded) && (
+      {decoded && (
         <ResultDisplay
           items={[
             {
               header: "Decoded Transaction:",
-              text: JSON.stringify(decoded || testDecoded, null, 2),
+              text: JSON.stringify(decoded, null, 2),
             },
           ]}
         />

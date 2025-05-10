@@ -5,6 +5,7 @@ import Container from "@/ui/Container";
 import ResultDisplay from "@/ui/ResultDisplay";
 import TextArea from "@/ui/TextArea";
 import { useState } from "react";
+import { isHex } from "viem";
 
 export default function TransactionDecoder() {
   const [input, setInput] = useState("");
@@ -33,7 +34,7 @@ export default function TransactionDecoder() {
   const decodeInputData = async (hex: string) => {
     setError(null);
 
-    if (!/^0x[0-9a-fA-F]{8,}$/.test(hex)) {
+    if (!isHex(hex)) {
       setError("Invalid transaction data");
       return;
     }

@@ -33,8 +33,8 @@ export default function Sidebar() {
       <div
         ref={sidebarRef}
         className={`absolute top-0 right-0 h-screen bg-[var(--color-surface)] border-l border-white/10 shadow-lg p-4 space-y-6 transform transition-transform duration-200 ease-in-out pointer-events-auto
-          ${isOpen ? "translate-x-0" : "translate-x-full"}
-        `}
+    ${isOpen ? "translate-x-0" : "translate-x-full"} rounded-tl-xl rounded-bl-xl
+  `}
         style={{ width: "fit-content", maxWidth: "100vw" }}
       >
         <button

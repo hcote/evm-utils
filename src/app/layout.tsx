@@ -7,9 +7,9 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalyticScript from "@/components/GoogleAnalyticsScript";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import "./globals.css";
 import AboutPageDropdown from "@/components/AboutPageDropdown";
 import SidebarNav from "@/components/SidebarNav";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

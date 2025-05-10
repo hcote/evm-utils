@@ -45,7 +45,7 @@ export default function Sidebar() {
           <IcoClose size={24} />
         </button>
 
-        <div className="mt-10 space-y-0.5 w-68">
+        <div className="mt-12 space-y-0.5 w-68">
           <ul role="menu" className="space-y-0.5">
             {NAVIGATION.map((item, i) => {
               const isSelected = item.path === pathname;

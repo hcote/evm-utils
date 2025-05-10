@@ -1,0 +1,1 @@
+export const CHAINLINK_ETH_USD_FEED = '0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419';

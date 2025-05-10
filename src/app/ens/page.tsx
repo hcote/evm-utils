@@ -8,14 +8,28 @@ import ResultDisplay from "@/ui/ResultDisplay";
 import TextInput from "@/ui/TextInput";
 import { client } from "@/utils/viemPublicClient";
 
+type LookupResult = {
+  type: "ens" | "address";
+  value: string;
+};
+
 export default function Page() {
   const [input, setInput] = useState("");
-  const [result, setResult] = useState<{
-    type: "ens" | "address";
-    value: string;
-  } | null>(null);
+  const [result, setResult] = useState<LookupResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const resolveAddress = async (address: `0x${string}`) => {
+    const ensName = await client.getEnsName({ address });
+    if (!ensName) throw new Error("No ENS name found for this address.");
+    setResult({ type: "address", value: ensName });
+  };
+
+  const resolveEnsName = async (ens: string) => {
+    const address = await client.getEnsAddress({ name: ens });
+    if (!address) throw new Error("ENS name not found.");
+    setResult({ type: "ens", value: address });
+  };
 
   const handleLookup = async () => {
     setError("");
@@ -23,21 +37,16 @@ export default function Page() {
     setIsLoading(true);
 
     try {
-      if (isAddress(input)) {
-        const ensName = await client.getEnsName({ address: input });
-        if (!ensName) throw new Error("No ENS name found for this address.");
-        setResult({ type: "address", value: ensName });
-      } else if (input.toLowerCase().endsWith(".eth")) {
-        const address = await client.getEnsAddress({
-          name: input.toLowerCase(),
-        });
-        if (!address) throw new Error("ENS name not found.");
-        setResult({ type: "ens", value: address });
+      const lowerInput = input.toLowerCase();
+      if (isAddress(lowerInput)) {
+        await resolveAddress(lowerInput);
+      } else if (lowerInput.endsWith(".eth")) {
+        await resolveEnsName(lowerInput);
       } else {
         throw new Error("Enter a valid ENS name or Ethereum address.");
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to resolve.");
+    } catch (err: unknown) {
+      setError((err as Error).message || "Failed to resolve.");
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +62,7 @@ export default function Page() {
         className="space-y-4"
       >
         <TextInput
-          label="ENS or Address"
+          label="ENS Name or Address"
           placeholder="ENS name or Address"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -62,7 +71,7 @@ export default function Page() {
         <Button
           label={isLoading ? "Resolving..." : "Resolve"}
           onClick={handleLookup}
-          disabled={isLoading || input.trim() === ""}
+          disabled={isLoading}
           expand
         />
       </form>

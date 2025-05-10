@@ -19,11 +19,10 @@ const IcoClose: React.FC<IcoCloseProps> = ({
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={`lucide lucide-circle-x-icon ${className}`}
+    className={`lucide lucide-x-icon ${className}`}
   >
-    <circle cx="12" cy="12" r="10" />
-    <path d="m15 9-6 6" />
-    <path d="m9 9 6 6" />
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
   </svg>
 );
 

@@ -14,7 +14,7 @@ export default function Sidebar() {
 
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
-      {/* Backdrop */}
+      {/* Overlay */}
       <div
         className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-200 ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0"
@@ -42,7 +42,7 @@ export default function Sidebar() {
           className="cursor-pointer absolute top-5 right-5 p-2 text-[var(--color-text-secondary)] rounded-4xl transition-colors hover:bg-[var(--color-btn-hover)]"
           aria-label="Close sidebar"
         >
-          <IcoClose size={24} />
+          <IcoClose color="var(--color-text-primary)" size={24} />
         </button>
 
         <div className="mt-12 space-y-0.5 w-68">

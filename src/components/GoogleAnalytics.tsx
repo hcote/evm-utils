@@ -1,5 +1,6 @@
 "use client";
 
+import { GOOGLE_ANALYTICS_KEY } from "@/constants/google-analytics";
 import { IS_PROD } from "@/constants/is-prod";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -15,7 +16,7 @@ export default function GoogleAnalytics() {
 
   useEffect(() => {
     if (IS_PROD && typeof window !== "undefined" && window.gtag) {
-      window.gtag("config", "G-FRW5YBK09S", {
+      window.gtag("config", GOOGLE_ANALYTICS_KEY, {
         page_path: pathname,
       });
     }

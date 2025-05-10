@@ -1,5 +1,16 @@
 import TextInput from "@/ui/TextInput";
 
+interface VanitySearchFieldsProps {
+  prefix: string;
+  setPrefix: (v: string) => void;
+  contains: string;
+  setContains: (v: string) => void;
+  suffix: string;
+  setSuffix: (v: string) => void;
+  startingNonce: string;
+  setStartingNonce: (v: string) => void;
+}
+
 export default function VanitySearchFields({
   prefix,
   setPrefix,
@@ -9,16 +20,7 @@ export default function VanitySearchFields({
   setSuffix,
   startingNonce,
   setStartingNonce,
-}: {
-  prefix: string;
-  setPrefix: (v: string) => void;
-  contains: string;
-  setContains: (v: string) => void;
-  suffix: string;
-  setSuffix: (v: string) => void;
-  startingNonce: string;
-  setStartingNonce: (v: string) => void;
-}) {
+}: VanitySearchFieldsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
       <TextInput

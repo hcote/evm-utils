@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { NAVIGATION } from "@/constants/navigation";
 import IcoChevronDown from "@/icons/IcoChevronDown";
@@ -9,7 +9,11 @@ export default function AboutPageDropdown() {
   const pathname = usePathname();
   const page = NAVIGATION.find((nav) => nav.path === pathname);
   const [open, setOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   if (!page) return null;
 
   const { longDesc } = page;
@@ -32,7 +36,6 @@ export default function AboutPageDropdown() {
         </button>
 
         <div
-          ref={contentRef}
           className={`transition-all duration-300 ease-in-out overflow-hidden text-sm text-[var(--color-text-secondary)] text-left mt-2 ${
             open
               ? "max-h-[75vh] opacity-100 overflow-y-auto"

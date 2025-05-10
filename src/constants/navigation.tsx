@@ -111,18 +111,6 @@ export const NAVIGATION: Navigation[] = [
     ),
     Icon: IcoDecoder,
   },
-  // {
-  //   name: "JSON RPC Methods",
-  //   path: "/rpc-requests",
-  //   shortDesc: "Interact with Ethereum nodes using JSON RPC methods.",
-  //   Icon: IcoRpcRequest,
-  // },
-  // {
-  //   name: "Contract Reader",
-  //   path: "/contract-reader",
-  //   shortDesc: "Read data from any Ethereum smart contract.",
-  //   Icon: IcoContractReader,
-  // },
   {
     name: "NFT Metadata",
     path: "/nft",
@@ -213,4 +201,22 @@ export const NAVIGATION: Navigation[] = [
     ),
     Icon: IcoDataDecoder,
   },
+  // {
+  //   name: "JSON RPC Methods",
+  //   path: "/rpc-requests",
+  //   shortDesc: "Interact with Ethereum nodes using JSON RPC methods.",
+  //   Icon: IcoRpcRequest,
+  // },
+  // {
+  //   name: "Contract Reader",
+  //   path: "/contract-reader",
+  //   shortDesc: "Read data from any Ethereum smart contract.",
+  //   Icon: IcoContractReader,
+  // },
+  // {
+  //   name: "Network Fees Explained",
+  //   path: "/network-fees",
+  //   shortDesc: "Understand how Ethereum network fees are calculated, legacy vs type-2 transactions and more.",
+  //   Icon: IcoNetworkFee,
+  // },
 ];

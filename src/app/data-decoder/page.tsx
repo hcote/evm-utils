@@ -11,9 +11,29 @@ export default function TransactionDecoder() {
   const [decoded, setDecoded] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const functionSigLookupUrl = "https://www.4byte.directory/api/v1/signatures/";
+
+  const testData =
+    "0xa9059cbb000000000000000000000000448ddf8326d95723f1f700d58ad8095036621108000000000000000000000000000000000000000000000000000000000db58580";
+
+  const fetchFunctionName = async (funcSelector: string) => {
+    const res = await fetch(
+      `${functionSigLookupUrl}?hex_signature=${funcSelector}`
+    );
+    const json = await res.json();
+    if (!json.results || json.results.length === 0) {
+      throw new Error("No function signature found");
+    }
+
+    const sorted = json.results.sort((a: any, b: any) => a.id - b.id);
+    const selectedSignature = sorted[0];
+    return selectedSignature.text_signature;
+  };
+
   const decodeInputData = async (hex: string) => {
     setError(null);
-    if (!hex.startsWith("0x") || hex.length < 10) {
+
+    if (!/^0x[0-9a-fA-F]{8,}$/.test(hex)) {
       setError("Invalid transaction data");
       return;
     }
@@ -21,51 +41,43 @@ export default function TransactionDecoder() {
     try {
       const funcSelector = hex.slice(0, 10);
       const paramsData = hex.slice(10);
+      const functionName = await fetchFunctionName(funcSelector);
 
-      const res = await fetch(
-        `https://www.4byte.directory/api/v1/signatures/?hex_signature=${funcSelector}`
-      );
-      const json = await res.json();
+      const match = functionName.match(/\(([^)]*)\)/);
+      const paramTypes =
+        match?.[1]
+          ?.split(",")
+          .map((s: string) => s.trim())
+          .filter(Boolean) || [];
 
-      if (!json.results || json.results.length === 0) {
-        throw new Error("No function signature found");
-      }
+      const chunks =
+        paramsData.match(/.{1,64}/g)?.map((chunk) => "0x" + chunk) || [];
 
-      const sorted = json.results.sort((a: any, b: any) => a.id - b.id);
-      const selectedSignature = sorted[0];
-      const functionName = selectedSignature.text_signature;
-
-      const paramTypes = functionName
-        .substring(functionName.indexOf("(") + 1, functionName.indexOf(")"))
-        .split(",")
-        .filter((x: string) => x);
-
-      const chunks = [];
-      for (let i = 0; i < paramsData.length; i += 64) {
-        chunks.push("0x" + paramsData.slice(i, i + 64));
-      }
+      const decodeParam = (param: string, type: string) => {
+        switch (type) {
+          case "address":
+            return "0x" + param.slice(-40);
+          case "uint256":
+          case "uint":
+          case "uint8":
+          case "uint64":
+            try {
+              return BigInt(param).toString();
+            } catch {
+              return "Invalid uint";
+            }
+          default:
+            return param;
+        }
+      };
 
       const decodedParams = chunks.map((param, idx) => {
         const type = paramTypes[idx] || "unknown";
-        if (type === "address") {
-          return {
-            type: "address",
-            raw: param,
-            decoded: "0x" + param.slice(-40),
-          };
-        } else if (type.startsWith("uint")) {
-          return {
-            type: "uint",
-            raw: param,
-            decoded: BigInt(param).toString(),
-          };
-        } else {
-          return {
-            type,
-            raw: param,
-            decoded: param,
-          };
-        }
+        return {
+          type,
+          raw: param,
+          decoded: decodeParam(param, type),
+        };
       });
 
       setDecoded({
@@ -79,21 +91,17 @@ export default function TransactionDecoder() {
     }
   };
 
-  const handleDecode = async () => {
-    setDecoded(null);
-    await decodeInputData(input);
+  const handleDecode = () => {
+    decodeInputData(input);
   };
 
-  const handleTest = async () => {
-    setDecoded(null);
+  const handleTest = () => {
     setInput("");
-    await decodeInputData(
-      "0xa9059cbb000000000000000000000000448ddf8326d95723f1f700d58ad8095036621108000000000000000000000000000000000000000000000000000000000db58580"
-    );
+    decodeInputData(testData);
   };
 
   return (
-    <Container className="space-y-6">
+    <Container>
       <TextArea
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -110,7 +118,7 @@ export default function TransactionDecoder() {
 
         {!input && (
           <>
-            <span className="text-sm font-normal text-[var(--color-text-secondary)]">
+            <span className="text-sm text-[var(--color-text-secondary)]">
               OR
             </span>
             <Button

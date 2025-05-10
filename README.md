@@ -38,6 +38,8 @@ Make transaction data human-readable.
 - Ability to load and query any smart contract
 - Explainer on EVM network fees, what makes them up and how they are calculated
 
+##### App Tree
+<pre>
 .
 ├── public
 └── src
@@ -60,3 +62,4 @@ Make transaction data human-readable.
     ├── icons
     ├── ui
     └── utils
+</pre>

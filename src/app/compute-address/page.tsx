@@ -24,9 +24,11 @@ export default function Page() {
   const [generatedNonce, setGeneratedNonce] = useState<string | null>(null);
   const [contractAddress, setContractAddress] = useState<string | null>(null);
 
-  const [usedPrefix, setUsedPrefix] = useState("");
-  const [usedContains, setUsedContains] = useState("");
-  const [usedSuffix, setUsedSuffix] = useState("");
+  const [usedSearch, setUsedSearch] = useState({
+    prefix: "",
+    contains: "",
+    suffix: "",
+  });
 
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,9 +99,7 @@ export default function Page() {
       if (matchesSearch(candidate, prefix, suffix, contains)) {
         setContractAddress(candidate);
         setGeneratedNonce(i.toString());
-        setUsedPrefix(prefix);
-        setUsedContains(contains);
-        setUsedSuffix(suffix);
+        setUsedSearch({ prefix, contains, suffix });
         setLoading(false);
         return;
       }
@@ -178,9 +178,9 @@ export default function Page() {
               header: "Contract Address",
               text: highlightAddressParts(
                 contractAddress,
-                usedPrefix,
-                usedSuffix,
-                usedContains
+                usedSearch.prefix,
+                usedSearch.suffix,
+                usedSearch.contains
               ),
               className: "break-all",
             },

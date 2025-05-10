@@ -2,10 +2,12 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-const SidebarContext = createContext<{
+interface SidebarContextType {
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
-}>({
+}
+
+const SidebarContext = createContext<SidebarContextType>({
   isOpen: false,
   setIsOpen: () => {},
 });

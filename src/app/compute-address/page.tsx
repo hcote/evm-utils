@@ -31,6 +31,8 @@ export default function Page() {
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const MAX_SEARCH_ATTEMPTS = 1000;
+
   const showClearFormButton =
     walletAddress || prefix || suffix || contains || (nonce && nonce !== "0");
 
@@ -86,8 +88,7 @@ export default function Page() {
 
     setLoading(true);
 
-    const maxAttempts = 1000;
-    for (let i = nonceNum; i < nonceNum + maxAttempts; i++) {
+    for (let i = nonceNum; i < nonceNum + MAX_SEARCH_ATTEMPTS; i++) {
       const candidate = getContractAddress({
         from: walletAddress as `0x${string}`,
         nonce: BigInt(i),

@@ -16,6 +16,7 @@ import { NETWORKS } from "@/constants/networks";
 import DropdownMenu from "@/ui/DropdownMenu";
 import ResultDisplay from "@/ui/ResultDisplay";
 import IcoChevronDown from "@/icons/IcoChevronDown";
+import Text from "@/ui/Text";
 
 export default function Page() {
   const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
@@ -115,9 +116,7 @@ export default function Page() {
 
         {isInputEmpty && (
           <>
-            <span className="text-sm font-normal text-[var(--color-text-secondary)]">
-              OR
-            </span>
+            <Text text="OR" variant="secondary" size="sm" />
             <Button
               label="Test it out"
               onClick={handleTest}
@@ -130,7 +129,7 @@ export default function Page() {
       </div>
 
       {error && (
-        <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
+        <Text variant="error" text={error} size="sm" className="pt-2" />
       )}
 
       {metadata && (

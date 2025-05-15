@@ -5,10 +5,10 @@
   --color-surface: #141516;
   --color-text-primary: #e5e5e5;
   --color-text-secondary: #8e99aa;
+  --color-text-error: #dd7072;
   --color-accent: #e5e5e5;
   --color-btn-hover: #dcdcdc1a;
   --color-border: #151617;
-  --color-text-error: #dd7072;
   --color-purple: #889cff;
   --color-green: #9ee3b7;
 }

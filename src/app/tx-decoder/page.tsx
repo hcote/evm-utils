@@ -3,6 +3,7 @@
 import Button from "@/ui/Button";
 import Container from "@/ui/Container";
 import ResultDisplay from "@/ui/ResultDisplay";
+import Text from "@/ui/Text";
 import TextArea from "@/ui/TextArea";
 import { jsonStringifyBigInt } from "@/utils/jsonStringifyBigInt";
 import { useState } from "react";
@@ -49,9 +50,7 @@ export default function Page() {
 
         {!rawTx && (
           <>
-            <span className="text-sm text-[var(--color-text-secondary)]">
-              OR
-            </span>
+            <Text text="OR" variant="secondary" size="sm" />
             <Button
               label="Test it out"
               onClick={() => handleDecode(true)}
@@ -63,7 +62,7 @@ export default function Page() {
       </div>
 
       {error && (
-        <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
+        <Text variant="error" text={error} size="sm" className="pt-2" />
       )}
 
       {decoded && (

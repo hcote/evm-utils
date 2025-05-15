@@ -7,6 +7,7 @@ import Container from "@/ui/Container";
 import ResultDisplay from "@/ui/ResultDisplay";
 import TextInput from "@/ui/TextInput";
 import { client } from "@/utils/viemPublicClient";
+import Text from "@/ui/Text";
 
 type LookupResult = {
   type: "ens" | "address";
@@ -77,9 +78,7 @@ export default function Page() {
       </form>
 
       {error && (
-        <p className="text-sm text-[var(--color-text-error)] pt-2">
-          Error: {error}
-        </p>
+        <Text variant="error" text={error} size="sm" className="pt-2" />
       )}
 
       {result && (

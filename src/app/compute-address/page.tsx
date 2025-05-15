@@ -10,6 +10,7 @@ import { matchesSearch } from "@/utils/matchesSearch";
 import { highlightAddressParts } from "@/utils/highlightAddressParts";
 import VanitySearchFields from "@/components/VanitySearchFields";
 import CheckBox from "@/ui/Checkbox";
+import Text from "@/ui/Text";
 
 export default function Page() {
   const [walletAddress, setWalletAddress] = useState("");
@@ -166,9 +167,7 @@ export default function Page() {
         />
       </div>
 
-      {error && (
-        <p className="text-sm text-[var(--color-text-error)] pt-2">{error}</p>
-      )}
+      {error && <Text variant="error" text={error} className="pt-2" />}
 
       {contractAddress && (
         <ResultDisplay

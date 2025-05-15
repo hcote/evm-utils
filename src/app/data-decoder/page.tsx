@@ -3,6 +3,7 @@
 import Button from "@/ui/Button";
 import Container from "@/ui/Container";
 import ResultDisplay from "@/ui/ResultDisplay";
+import Text from "@/ui/Text";
 import TextArea from "@/ui/TextArea";
 import { useState } from "react";
 import { isHex } from "viem";
@@ -119,9 +120,7 @@ export default function TransactionDecoder() {
 
         {!input && (
           <>
-            <span className="text-sm text-[var(--color-text-secondary)]">
-              OR
-            </span>
+            <Text text="OR" variant="secondary" size="sm" />
             <Button
               label="Test it out"
               onClick={handleTest}
@@ -133,7 +132,7 @@ export default function TransactionDecoder() {
       </div>
 
       {error && (
-        <div className="text-[var(--color-text-error)] mb-4">{error}</div>
+        <Text variant="error" text={error} size="sm" className="mb-4" />
       )}
 
       {decoded && (

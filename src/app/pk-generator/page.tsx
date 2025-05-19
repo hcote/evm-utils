@@ -52,7 +52,9 @@ export default function Page() {
   };
 
   const generateVanityAddress = async () => {
-    setIsLoading(true);
+    if (prefix || suffix || contains) {
+      setIsLoading(true);
+    }
 
     // Allow UI to update before starting the generation
     // This is a workaround to prevent the UI from freezing

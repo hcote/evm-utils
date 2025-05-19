@@ -4,10 +4,7 @@ import { useState } from "react";
 import { isAddress } from "viem/utils";
 import erc721Abi from "@/abis/erc721";
 import { resolveIPFS } from "@/utils/resolveIPFS";
-import {
-  client as mainnetClient,
-  getPublicClient,
-} from "@/utils/viemPublicClient";
+import { mainnetClient, getPublicClient } from "@/utils/viemPublicClient";
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
 import TextInput from "@/ui/TextInput";
@@ -17,6 +14,7 @@ import DropdownMenu from "@/ui/DropdownMenu";
 import ResultDisplay from "@/ui/ResultDisplay";
 import IcoChevronDown from "@/icons/IcoChevronDown";
 import Text from "@/ui/Text";
+import { PublicClient } from "viem";
 
 export default function Page() {
   const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
@@ -29,9 +27,9 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [openImage, setOpenImage] = useState(false);
+  const [isImageOpen, setIsImageOpen] = useState(false);
 
-  const [client, setClient] = useState(() =>
+  const [client, setClient] = useState<PublicClient>(() =>
     getPublicClient(NETWORKS[0].chain)
   );
 
@@ -137,13 +135,13 @@ export default function Page() {
           {metadata.image && (
             <div>
               <button
-                onClick={() => setOpenImage((prev) => !prev)}
+                onClick={() => setIsImageOpen((prev) => !prev)}
                 className="cursor-pointer text-sm text-[var(--color-accent)] hover:bg-[var(--color-bg)] px-3 py-3 rounded-xl transition-colors inline-flex items-center"
               >
                 View NFT Image
                 <span
                   className={`ml-1 transform transition-transform duration-200 ${
-                    openImage ? "rotate-180" : ""
+                    isImageOpen ? "rotate-180" : ""
                   }`}
                 >
                   <IcoChevronDown size={16} />
@@ -152,7 +150,9 @@ export default function Page() {
 
               <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden mt-2 ${
-                  openImage ? "max-h-[512px] opacity-100" : "max-h-0 opacity-0"
+                  isImageOpen
+                    ? "max-h-[512px] opacity-100"
+                    : "max-h-0 opacity-0"
                 }`}
               >
                 <div className="p-2">

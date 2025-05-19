@@ -1,9 +1,9 @@
-import { client } from '@/utils/viemPublicClient';
+import { mainnetClient } from '@/utils/viemPublicClient';
 import { NextResponse } from 'next/server';
 import { formatUnits } from "viem";
 
 export async function GET() {
-  const gasPrice = await client.getGasPrice();
+  const gasPrice = await mainnetClient.getGasPrice();
   const gasPriceGwei = Number(formatUnits(BigInt(gasPrice), 9));
 
   return new NextResponse(

@@ -1,11 +1,11 @@
 import { chainlinkPriceFeedAbi } from '@/abis/chainlink';
 import { CHAINLINK_ETH_USD_FEED } from '@/constants/addresses';
-import { client } from '@/utils/viemPublicClient';
+import { mainnetClient } from '@/utils/viemPublicClient';
 import { NextResponse } from 'next/server';
 import { formatUnits } from 'viem';
 
 export async function GET() {
-  const result = await client.readContract({
+  const result = await mainnetClient.readContract({
     address: CHAINLINK_ETH_USD_FEED,
     abi: chainlinkPriceFeedAbi,
     functionName: 'latestRoundData',

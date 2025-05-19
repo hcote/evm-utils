@@ -6,7 +6,7 @@ import Button from "@/ui/Button";
 import Container from "@/ui/Container";
 import ResultDisplay from "@/ui/ResultDisplay";
 import TextInput from "@/ui/TextInput";
-import { client } from "@/utils/viemPublicClient";
+import { mainnetClient } from "@/utils/viemPublicClient";
 import Text from "@/ui/Text";
 
 type LookupResult = {
@@ -21,13 +21,13 @@ export default function Page() {
   const [error, setError] = useState("");
 
   const resolveAddress = async (address: `0x${string}`) => {
-    const ensName = await client.getEnsName({ address });
+    const ensName = await mainnetClient.getEnsName({ address });
     if (!ensName) throw new Error("No ENS name found for this address.");
     setResult({ type: "address", value: ensName });
   };
 
   const resolveEnsName = async (ens: string) => {
-    const address = await client.getEnsAddress({ name: ens });
+    const address = await mainnetClient.getEnsAddress({ name: ens });
     if (!address) throw new Error("ENS name not found.");
     setResult({ type: "ens", value: address });
   };

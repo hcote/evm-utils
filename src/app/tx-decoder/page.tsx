@@ -44,7 +44,7 @@ export default function Page() {
         <Button
           disabled={!rawTx}
           label="Decode Transaction"
-          onClick={handleDecode}
+          onClick={() => handleDecode(false)}
           expand
         />
 

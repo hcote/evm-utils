@@ -213,7 +213,12 @@ export default function Page() {
 
               {results[fn.name] !== undefined && (
                 <div className="mt-2 text-sm text-[var(--color-text-secondary)] whitespace-pre-wrap break-all">
-                  Result: {jsonStringifyBigInt(results[fn.name])}
+                  Result:{" "}
+                  {JSON.stringify(
+                    jsonStringifyBigInt(results[fn.name]),
+                    null,
+                    2
+                  )}
                 </div>
               )}
             </Fragment>

@@ -98,7 +98,7 @@ export default function TransactionDecoder() {
   };
 
   const handleTest = () => {
-    setInput("");
+    setInput(testData);
     decodeInputData(testData);
   };
 

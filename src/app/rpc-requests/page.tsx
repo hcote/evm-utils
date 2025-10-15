@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { createPublicClient, http } from "viem";
 import { RPC_METHODS, RpcParameter } from "@/constants/rpc-methods";
-import { NETWORKS } from "@/constants/networks";
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
 import TextInput from "@/ui/TextInput";
-import DropdownMenu from "@/ui/DropdownMenu";
+import { useNetworkSelection } from "@/hooks/use-network-selection";
+import NetworkSelector from "@/components/NetworkSelector";
 
 type InputsState = Record<string, Record<string, string>>;
 type ResultsState = Record<string, unknown>;
@@ -15,17 +14,14 @@ type ResultsState = Record<string, unknown>;
 export default function Page() {
   const [inputs, setInputs] = useState<InputsState>({});
   const [results, setResults] = useState<ResultsState>({});
-  const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
-  const [client, setClient] = useState<any>(
-    createPublicClient({ chain: NETWORKS[0].chain, transport: http() })
-  );
 
-  const handleNetworkChange = (network: (typeof NETWORKS)[number]) => {
-    setSelectedNetwork(network);
-    setClient(
-      createPublicClient({ chain: network.chain as any, transport: http() })
-    );
-  };
+  const {
+    selectedNetwork,
+    customRpcUrl,
+    client,
+    handleNetworkChange,
+    handleCustomRpcUrlChange,
+  } = useNetworkSelection();
 
   const handleInputChange = (
     method: string,
@@ -55,6 +51,8 @@ export default function Page() {
 
   const handleCall = async (method: string, parameters: RpcParameter[]) => {
     try {
+      if (!client) throw new Error("Client not found");
+
       const params = parameters.map((param) =>
         parseInputValue(param.type, inputs[method]?.[param.name] ?? "")
       );
@@ -79,13 +77,12 @@ export default function Page() {
 
   return (
     <div className="px-8 py-6 max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center justify-end">
-        <DropdownMenu
-          selected={selectedNetwork}
-          options={NETWORKS}
-          onSelect={handleNetworkChange}
-        />
-      </div>
+      <NetworkSelector
+        selectedNetwork={selectedNetwork}
+        customRpcUrl={customRpcUrl}
+        onNetworkChange={handleNetworkChange}
+        onCustomRpcUrlChange={handleCustomRpcUrlChange}
+      />
 
       <div className="grid gap-4">
         {RPC_METHODS.map(({ method, description, parameters }) => (

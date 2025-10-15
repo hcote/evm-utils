@@ -20,6 +20,7 @@ export default function Page() {
 
   const handleDecode = (isTestData = false) => {
     const input = isTestData ? testHex : rawTx;
+    if (isTestData) setRawTx(testHex);
     try {
       setError("");
       if (!isHex(input)) throw new Error("Input is not a valid transaction.");

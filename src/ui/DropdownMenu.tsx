@@ -76,7 +76,7 @@ export default function DropdownMenu({
                       onSelect(option);
                       setOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-3 text-sm transition rounded-md flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+                    className={`w-full text-left px-4 py-3 text-sm transition rounded-md flex items-center gap-2 focus:outline-none ${
                       dropdownItemClassName ?? ""
                     } ${
                       isSelected

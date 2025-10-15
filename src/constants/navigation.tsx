@@ -1,4 +1,5 @@
 import IcoCompute from "@/icons/IcoCompute";
+import IcoContractReader from "@/icons/IcoContractReader";
 import IcoDataDecoder from "@/icons/IcoDataDecoder";
 import IcoDecoder from "@/icons/IcoDecoder";
 import IcoENS from "@/icons/IcoENS";
@@ -208,12 +209,21 @@ export const NAVIGATION: Navigation[] = [
   //   shortDesc: "Interact with Ethereum nodes using JSON RPC methods.",
   //   Icon: IcoRpcRequest,
   // },
-  // {
-  //   name: "Contract Reader",
-  //   path: "/contract-reader",
-  //   shortDesc: "Read data from any Ethereum smart contract.",
-  //   Icon: IcoContractReader,
-  // },
+  {
+    name: "Contract Reader",
+    path: "/contract-reader",
+    shortDesc: "Read data from any Ethereum smart contract.",
+    longDesc: (
+      <>
+        <PageDescription spaced={false}>
+          This tool lets you query read-only functions from any smart contract.
+          Simply provide the contract address and ABI, and it will display the
+          contract methods available.
+        </PageDescription>
+      </>
+    ),
+    Icon: IcoContractReader,
+  },
   // {
   //   name: "Network Fees Explained",
   //   path: "/network-fees",

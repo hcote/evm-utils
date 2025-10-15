@@ -4,20 +4,25 @@ import { useState } from "react";
 import { isAddress } from "viem/utils";
 import erc721Abi from "@/abis/erc721";
 import { resolveIPFS } from "@/utils/resolveIPFS";
-import { mainnetClient, getPublicClient } from "@/utils/viemPublicClient";
+import { mainnetClient } from "@/utils/viemPublicClient";
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
 import TextInput from "@/ui/TextInput";
 import Image from "next/image";
-import { NETWORKS } from "@/constants/networks";
-import DropdownMenu from "@/ui/DropdownMenu";
 import ResultDisplay from "@/ui/ResultDisplay";
 import IcoChevronDown from "@/icons/IcoChevronDown";
 import Text from "@/ui/Text";
-import { PublicClient } from "viem";
+import { useNetworkSelection } from "@/hooks/use-network-selection";
+import NetworkSelector from "@/components/NetworkSelector";
 
 export default function Page() {
-  const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
+  const {
+    selectedNetwork,
+    customRpcUrl,
+    client,
+    handleNetworkChange,
+    handleCustomRpcUrlChange,
+  } = useNetworkSelection();
 
   const [address, setAddress] = useState("");
   const [tokenId, setTokenId] = useState("");
@@ -28,10 +33,6 @@ export default function Page() {
   const [error, setError] = useState("");
 
   const [isImageOpen, setIsImageOpen] = useState(false);
-
-  const [client, setClient] = useState<PublicClient>(() =>
-    getPublicClient(NETWORKS[0].chain)
-  );
 
   const isInputEmpty = !address && !tokenId;
 
@@ -44,6 +45,7 @@ export default function Page() {
     setError("");
 
     try {
+      if (!overrideClient) throw new Error("Client not found");
       if (!isAddress(addr)) throw new Error("Invalid address");
       if (!id) throw new Error("Token ID is required");
 
@@ -71,21 +73,19 @@ export default function Page() {
   const handleTest = async () => {
     const testAddress = "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D";
     const testTokenId = "1";
+    setAddress(testAddress);
+    setTokenId(testTokenId);
     await fetchMetadata(testAddress, testTokenId, mainnetClient);
   };
 
   return (
     <Container>
-      <div className="flex justify-end">
-        <DropdownMenu
-          selected={selectedNetwork}
-          options={NETWORKS}
-          onSelect={(network) => {
-            setSelectedNetwork(network);
-            setClient(getPublicClient(network.chain));
-          }}
-        />
-      </div>
+      <NetworkSelector
+        selectedNetwork={selectedNetwork}
+        customRpcUrl={customRpcUrl}
+        onNetworkChange={handleNetworkChange}
+        onCustomRpcUrlChange={handleCustomRpcUrlChange}
+      />
 
       <TextInput
         label="NFT Address"

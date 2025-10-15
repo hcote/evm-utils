@@ -3,11 +3,12 @@ import IcoBase from "@/icons/IcoBase";
 import IcoEthereum from "@/icons/IcoEthereum";
 import IcoOptimism from "@/icons/IcoOptimism";
 import IcoPolygon from "@/icons/IcoPolygon";
-import { mainnet, polygon, optimism, arbitrum, base, sepolia } from "viem/chains";
+import IcoCustom from "@/icons/IcoCustom";
+import { mainnet, polygon, optimism, arbitrum, base, sepolia, Chain } from "viem/chains";
 
 interface Network {
   name: string;
-  chain: any;
+  chain?: Chain;
   Icon: React.FC<React.SVGProps<SVGSVGElement> & {
     color?: string;
     size?: number;
@@ -22,4 +23,5 @@ export const NETWORKS: Network[] = [
   { name: "Arbitrum", chain: arbitrum, Icon: IcoArbitrum },
   { name: "Polygon", chain: polygon, Icon: IcoPolygon },
   { name: "Eth Sepolia", chain: sepolia, Icon: IcoEthereum },
+  { name: "Custom RPC", Icon: IcoCustom },
 ];

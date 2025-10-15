@@ -4,13 +4,15 @@ import erc20Abi from "@/abis/erc20";
 import erc721Abi from "@/abis/erc721";
 import { jsonStringifyBigInt } from "@/utils/jsonStringifyBigInt";
 import { Fragment, useState } from "react";
-import { Abi, AbiFunction, isAddress } from "viem";
+import { Abi, AbiFunction, Chain, isAddress } from "viem";
 import { getPublicClient } from "@/utils/viemPublicClient";
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
 import TextInput from "@/ui/TextInput";
 import TextArea from "@/ui/TextArea";
 import { NETWORKS } from "@/constants/networks";
+import { useNetworkSelection } from "@/hooks/use-network-selection";
+import NetworkSelector from "@/components/NetworkSelector";
 import DropdownMenu from "@/ui/DropdownMenu";
 
 const presetAbis: Record<string, Abi> = {
@@ -19,9 +21,9 @@ const presetAbis: Record<string, Abi> = {
 };
 
 const ABI_OPTIONS = [
-  { id: "ERC20", name: "ERC20" },
-  { id: "ERC721", name: "ERC721" },
-  { id: "Custom", name: "Custom" },
+  { id: "ERC20", name: "ABI Type - ERC20" },
+  { id: "ERC721", name: "ABI Type - ERC721" },
+  { id: "Custom", name: "ABI Type - Custom" },
 ];
 
 export default function Page() {
@@ -33,10 +35,13 @@ export default function Page() {
   const [results, setResults] = useState<Record<string, any>>({});
   const [error, setError] = useState("");
 
-  const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[0]);
-  const [client, setClient] = useState(() =>
-    getPublicClient(NETWORKS[0].chain)
-  );
+  const {
+    selectedNetwork,
+    customRpcUrl,
+    client,
+    handleNetworkChange,
+    handleCustomRpcUrlChange,
+  } = useNetworkSelection();
 
   const handleLoadAbi = () => {
     try {
@@ -68,6 +73,7 @@ export default function Page() {
 
   const callFunction = async (fn: AbiFunction) => {
     try {
+      if (!client) throw new Error("Client not found");
       const args = inputs[fn.name] || [];
       const parsedArgs = fn.inputs.map((_, i) => args[i]);
       const result = await client.readContract({
@@ -87,12 +93,15 @@ export default function Page() {
 
   const handleTest = async () => {
     try {
-      const testNetwork = NETWORKS.find((n) => n.chain.id === 1); // Mainnet
+      const testNetwork = NETWORKS.find((n) => n?.chain?.id === 1); // Mainnet
       if (!testNetwork) throw new Error("Mainnet not found in network list");
 
-      const testClient = getPublicClient(testNetwork.chain);
+      const testClient = getPublicClient(testNetwork.chain as Chain);
       const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
       const abi = presetAbis.ERC20;
+
+      setContractAddress(usdcAddress);
+      setAbiOption(ABI_OPTIONS[0]);
 
       const viewFns = abi.filter(
         (fn: any) =>
@@ -100,24 +109,25 @@ export default function Page() {
           (fn.stateMutability === "view" || fn.stateMutability === "pure")
       ) as AbiFunction[];
 
-      const resultsMap: Record<string, any> = {};
-      for (const fn of viewFns) {
-        if (fn.inputs.length === 0) {
-          try {
-            const result = await testClient.readContract({
-              address: usdcAddress,
-              abi: [fn],
-              functionName: fn.name,
-            });
-            resultsMap[fn.name] = result;
-          } catch (err: any) {
-            resultsMap[fn.name] = `Error: ${err.message}`;
-          }
-        }
-      }
+      // Uncomment out to query each function and populate results
+      // const resultsMap: Record<string, any> = {};
+      // for (const fn of viewFns) {
+      //   if (fn.inputs.length === 0) {
+      //     try {
+      //       const result = await testClient.readContract({
+      //         address: usdcAddress,
+      //         abi: [fn],
+      //         functionName: fn.name,
+      //       });
+      //       resultsMap[fn.name] = result;
+      //     } catch (err: any) {
+      //       resultsMap[fn.name] = `Error: ${err.message}`;
+      //     }
+      //   }
+      // }
 
       setAbiFunctions(viewFns);
-      setResults(resultsMap);
+      // setResults(resultsMap);
       setError("");
     } catch (err: any) {
       setError(err.message || "Error running test");
@@ -128,16 +138,12 @@ export default function Page() {
 
   return (
     <Container className="space-y-6">
-      <div className="flex justify-end">
-        <DropdownMenu
-          selected={selectedNetwork}
-          options={NETWORKS}
-          onSelect={(network) => {
-            setSelectedNetwork(network);
-            setClient(getPublicClient(network.chain));
-          }}
-        />
-      </div>
+      <NetworkSelector
+        selectedNetwork={selectedNetwork}
+        customRpcUrl={customRpcUrl}
+        onNetworkChange={handleNetworkChange}
+        onCustomRpcUrlChange={handleCustomRpcUrlChange}
+      />
 
       <TextInput
         placeholder="Contract Address"

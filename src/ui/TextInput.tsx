@@ -9,6 +9,7 @@ interface TextInputProps {
   type?: string;
   id?: string;
   label?: string;
+  size?: "md" | "sm";
 }
 
 export default function TextInput({
@@ -20,7 +21,9 @@ export default function TextInput({
   type = "text",
   id = "",
   label,
+  size = "md",
 }: TextInputProps) {
+  const sizeClasses = size === "sm" ? "px-4 py-2 text-sm" : "p-2.5";
   return label ? (
     <div className="space-y-1">
       <label
@@ -38,7 +41,7 @@ export default function TextInput({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`w-full p-2.5 transition rounded-md bg-[var(--color-bg)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-text-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+        className={`w-full ${sizeClasses} transition rounded-md bg-[var(--color-bg)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-text-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
       />
     </div>
   ) : (
@@ -49,7 +52,7 @@ export default function TextInput({
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className={`w-full p-2.5 transition rounded-md bg-[var(--color-bg)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-text-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`w-full ${sizeClasses} transition rounded-md bg-[var(--color-bg)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-text-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     />
   );
 }

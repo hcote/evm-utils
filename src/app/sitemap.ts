@@ -12,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/ens',
     '/compute-address',
     '/data-decoder',
+    '/json-rpc',
+    '/contract-reader',
   ];
 
   return paths.map((path) => ({

@@ -65,7 +65,10 @@ export default function DropdownMenu({
 
       {open && (
         <div className="absolute bg-[var(--color-surface)] text-[var(--color-text-primary)] top-full mt-2 right-0 w-72 rounded-md shadow-xl z-50 border border-white/10">
-          <ul role="menu" className="max-h-100 overflow-y-auto space-y-0.5">
+          <ul
+            role="menu"
+            className="max-h-120 overflow-y-auto space-y-0.5 p-0.5"
+          >
             {options.map((option, i) => {
               const isSelected = option.name === selected.name;
               return (

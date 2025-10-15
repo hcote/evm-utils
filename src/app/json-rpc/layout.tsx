@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "JSON RPC Methods",
-  description: "Interact with Ethereum nodes using JSON RPC methods",
+  title: "JSON RPC",
+  description: "Send JSON RPC requests to EVM nodes",
 };
 
 interface LayoutProps {

@@ -5,6 +5,7 @@ import IcoDecoder from "@/icons/IcoDecoder";
 import IcoENS from "@/icons/IcoENS";
 import IcoKeyGen from "@/icons/IcoKeyGen";
 import IcoMetadata from "@/icons/IcoMetadata";
+import IcoRpcRequest from "@/icons/IcoRpcRequest";
 import IcoUnits from "@/icons/IcoUnits";
 import Code from "@/ui/Code";
 import PageDescription from "@/ui/PageDescription";
@@ -203,12 +204,26 @@ export const NAVIGATION: Navigation[] = [
     ),
     Icon: IcoDataDecoder,
   },
-  // {
-  //   name: "JSON RPC Methods",
-  //   path: "/rpc-requests",
-  //   shortDesc: "Interact with Ethereum nodes using JSON RPC methods.",
-  //   Icon: IcoRpcRequest,
-  // },
+  {
+    name: "JSON RPC",
+    path: "/json-rpc",
+    shortDesc: "Send JSON RPC requests to EVM nodes.",
+    longDesc: (
+      <>
+        <PageDescription spaced={false}>
+          JSON RPC is the communication protocol used by dapps to interact with
+          EVM nodes. Every time you check a wallet balance, send a transaction,
+          or read smart contract data, you're making a JSON RPC call.
+        </PageDescription>
+        <PageDescription>
+          This tool lets you experiment with these methods directly, making it
+          easier to debug, test, and understand how applications communicate
+          with the blockchain.
+        </PageDescription>
+      </>
+    ),
+    Icon: IcoRpcRequest,
+  },
   {
     name: "Contract Reader",
     path: "/contract-reader",

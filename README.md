@@ -32,10 +32,16 @@ Calculate the deployed-at address for a smart contract given a deployer address.
 
 Make transaction data human-readable.
 
+#### JSON RPC
+
+Send JSON RPC requests to EVM nodes.
+
+#### Contract Reader
+
+Read data from any Ethereum smart contract.
+
 ##### Coming Soon
 
-- An interface to send JSON rpc requests to popular EVM chains
-- Ability to load and query any smart contract
 - Explainer on EVM network fees, what makes them up and how they are calculated
 
 ##### App Tree

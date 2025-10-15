@@ -23,5 +23,5 @@ export const NETWORKS: Network[] = [
   { name: "Arbitrum", chain: arbitrum, Icon: IcoArbitrum },
   { name: "Polygon", chain: polygon, Icon: IcoPolygon },
   { name: "Eth Sepolia", chain: sepolia, Icon: IcoEthereum },
-  { name: "Custom RPC", Icon: IcoCustom },
+  { name: "Custom", Icon: IcoCustom },
 ];

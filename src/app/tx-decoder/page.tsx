@@ -33,12 +33,13 @@ export default function Page() {
   };
 
   return (
-    <Container className="space-y-6">
+    <Container>
       <TextArea
         placeholder="Enter raw transaction (0x...)"
         value={rawTx}
         onChange={(e) => setRawTx(e.target.value)}
         rows={3}
+        label="Raw Transaction"
       />
 
       <div className="flex flex-col items-center justify-center gap-4">

@@ -108,6 +108,7 @@ export default function TransactionDecoder() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Paste transaction data (0x...)"
+        label="Transaction Data"
       />
 
       <div className="flex flex-col items-center justify-center gap-4">

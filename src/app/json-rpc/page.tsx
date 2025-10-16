@@ -239,6 +239,7 @@ export default function Page() {
 
         {result !== null && (
           <ResultDisplay
+            wrapPreText={true}
             items={[
               {
                 header: "Response:",

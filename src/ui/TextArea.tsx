@@ -9,6 +9,7 @@ interface TextAreaProps {
   rows?: number;
   autoResize?: boolean;
   minRows?: number;
+  label?: string;
 }
 
 export default function TextArea({
@@ -20,6 +21,7 @@ export default function TextArea({
   rows = 3,
   autoResize = false,
   minRows = 3,
+  label,
 }: TextAreaProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -40,7 +42,7 @@ export default function TextArea({
     }
   }, [value, autoResize, minRows]);
 
-  return (
+  const textarea = (
     <textarea
       ref={textareaRef}
       value={value}
@@ -51,5 +53,20 @@ export default function TextArea({
       style={autoResize ? { overflow: "hidden", resize: "none" } : undefined}
       className={`w-full p-2.5 rounded-md bg-[var(--color-bg)] border border-[var(--color-text-secondary)] text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-text-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     />
+  );
+
+  return label ? (
+    <div className="space-y-1">
+      <label
+        className={`block text-sm transition-opacity duration-200 ${
+          value ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+      >
+        {label}
+      </label>
+      {textarea}
+    </div>
+  ) : (
+    textarea
   );
 }

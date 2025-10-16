@@ -19,7 +19,7 @@ export default function AboutPageDropdown() {
   const { longDesc } = page;
 
   return (
-    <div className="flex items-center justify-center mb-12 overflow-y-auto">
+    <div className="flex items-center justify-center mb-8 overflow-y-auto">
       <div className="max-w-[30rem] w-full text-center">
         <button
           onClick={() => setOpen((prev) => !prev)}

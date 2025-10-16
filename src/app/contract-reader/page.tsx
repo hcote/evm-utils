@@ -3,9 +3,8 @@
 import erc20Abi from "@/abis/erc20";
 import erc721Abi from "@/abis/erc721";
 import { jsonStringifyBigInt } from "@/utils/jsonStringifyBigInt";
-import { Fragment, useState } from "react";
-import { Abi, AbiFunction, Chain, isAddress } from "viem";
-import { getPublicClient } from "@/utils/viemPublicClient";
+import { useState } from "react";
+import { Abi, AbiFunction, isAddress } from "viem";
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
 import TextInput from "@/ui/TextInput";
@@ -96,7 +95,6 @@ export default function Page() {
       const testNetwork = NETWORKS.find((n) => n?.chain?.id === 1); // Mainnet
       if (!testNetwork) throw new Error("Mainnet not found in network list");
 
-      const testClient = getPublicClient(testNetwork.chain as Chain);
       const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
       const abi = presetAbis.ERC20;
 
@@ -137,7 +135,7 @@ export default function Page() {
   const isInputEmpty = !contractAddress;
 
   return (
-    <Container className="space-y-6">
+    <Container>
       <NetworkSelector
         selectedNetwork={selectedNetwork}
         customRpcUrl={customRpcUrl}
@@ -149,6 +147,7 @@ export default function Page() {
         placeholder="Contract Address"
         value={contractAddress}
         onChange={(e) => setContractAddress(e.target.value)}
+        label="Contract Address"
       />
 
       <DropdownMenu
@@ -196,39 +195,64 @@ export default function Page() {
       </div>
 
       {abiFunctions.length > 0 && (
-        <div className="space-y-6">
-          {abiFunctions.map((fn) => (
-            <Fragment key={fn.name}>
-              <h2 className="text-lg font-semibold">{fn.name}</h2>
+        <div className="space-y-3">
+          <h2 className="text-lg font-bold text-[var(--color-text-primary)] border-t border-white/10 pt-4 pb-2">
+            Contract Methods
+          </h2>
 
-              {fn.inputs.map((input, index) => (
-                <TextInput
-                  key={index}
-                  placeholder={`${input.name || "arg" + index} (${input.type})`}
-                  value={inputs[fn.name]?.[index] || ""}
-                  onChange={(e) =>
-                    handleInputChange(fn.name, index, e.target.value)
-                  }
-                />
-              ))}
-
-              <Button
-                label={`Call ${fn.name}`}
-                onClick={() => callFunction(fn)}
-              />
-
-              {results[fn.name] !== undefined && (
-                <div className="mt-2 text-sm text-[var(--color-text-secondary)] whitespace-pre-wrap break-all">
-                  Result:{" "}
-                  {JSON.stringify(
-                    jsonStringifyBigInt(results[fn.name]),
-                    null,
-                    2
-                  )}
+          <div className="grid gap-3">
+            {abiFunctions.map((fn) => (
+              <div
+                key={fn.name}
+                className="border border-white/10 rounded-lg p-3 bg-[var(--color-bg)]/50 backdrop-blur-sm hover:border-white/20 transition-colors"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-base font-semibold text-[var(--color-text-primary)] font-mono">
+                    {fn.name}()
+                  </h3>
+                  <Button
+                    label="Call"
+                    onClick={() => callFunction(fn)}
+                    size="sm"
+                  />
                 </div>
-              )}
-            </Fragment>
-          ))}
+
+                {fn.inputs.length > 0 && (
+                  <div className="space-y-2">
+                    {fn.inputs.map((input, index) => (
+                      <div key={index} className="space-y-1">
+                        <label className="text-xs text-[var(--color-text-secondary)] font-medium">
+                          {input.name || `arg${index}`}
+                          <span className="ml-1.5 font-mono opacity-70">
+                            ({input.type})
+                          </span>
+                        </label>
+                        <TextInput
+                          placeholder={`${input.type}`}
+                          value={inputs[fn.name]?.[index] || ""}
+                          onChange={(e) =>
+                            handleInputChange(fn.name, index, e.target.value)
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {results[fn.name] !== undefined && (
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <span className="font-mono text-xs text-[var(--color-accent)] whitespace-pre-wrap break-all">
+                      {JSON.stringify(
+                        jsonStringifyBigInt(results[fn.name]),
+                        null,
+                        2
+                      )}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </Container>

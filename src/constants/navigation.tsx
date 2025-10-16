@@ -28,7 +28,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "ETH Unit Converter",
     path: "/unit-converter",
-    shortDesc: "Convert between Wei, Gwei, and ETH units.",
+    shortDesc: "Convert between Wei, Gwei, and ETH units",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -52,7 +52,7 @@ export const NAVIGATION: Navigation[] = [
     name: "Private Key Generator",
     path: "/pk-generator",
     shortDesc:
-      "Generate a random EVM private key and address, with support for vanity prefixes or suffixes.",
+      "Generate a random EVM private key and address, with support for vanity prefixes or suffixes",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -76,7 +76,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "Transaction Decoder",
     path: "/tx-decoder",
-    shortDesc: "Decode a raw EVM transaction to view its contents.",
+    shortDesc: "Decode a raw EVM transaction to view its contents",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -117,7 +117,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "NFT Metadata",
     path: "/nft",
-    shortDesc: "Fetch and display metadata for any ERC-721 token.",
+    shortDesc: "Fetch and display metadata for any ERC-721 token",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -143,7 +143,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "ENS Lookup",
     path: "/ens",
-    shortDesc: "Resolve Ethereum Name Service domains to addresses.",
+    shortDesc: "Resolve Ethereum Name Service domains to addresses",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -165,7 +165,7 @@ export const NAVIGATION: Navigation[] = [
     name: "Compute Contract Address",
     path: "/compute-address",
     shortDesc:
-      "Calculate the deployed-at address for a smart contract given a deployer address.",
+      "Calculate the deployed-at address for a smart contract given a deployer address",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -187,7 +187,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "Data Decoder",
     path: "/data-decoder",
-    shortDesc: "Make transaction data human-readable.",
+    shortDesc: "Make transaction data human-readable",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -207,7 +207,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "JSON RPC",
     path: "/json-rpc",
-    shortDesc: "Send JSON RPC requests to EVM nodes.",
+    shortDesc: "Send JSON RPC requests to EVM nodes",
     longDesc: (
       <>
         <PageDescription spaced={false}>
@@ -227,7 +227,7 @@ export const NAVIGATION: Navigation[] = [
   {
     name: "Contract Reader",
     path: "/contract-reader",
-    shortDesc: "Read data from any Ethereum smart contract.",
+    shortDesc: "Read data from any Ethereum smart contract",
     longDesc: (
       <>
         <PageDescription spaced={false}>

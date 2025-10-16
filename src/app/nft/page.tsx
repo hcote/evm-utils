@@ -80,19 +80,21 @@ export default function Page() {
 
   return (
     <Container>
-      <NetworkSelector
-        selectedNetwork={selectedNetwork}
-        customRpcUrl={customRpcUrl}
-        onNetworkChange={handleNetworkChange}
-        onCustomRpcUrlChange={handleCustomRpcUrlChange}
-      />
+      <div>
+        <NetworkSelector
+          selectedNetwork={selectedNetwork}
+          customRpcUrl={customRpcUrl}
+          onNetworkChange={handleNetworkChange}
+          onCustomRpcUrlChange={handleCustomRpcUrlChange}
+        />
 
-      <TextInput
-        label="NFT Address"
-        placeholder="NFT Contract Address"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-      />
+        <TextInput
+          label="NFT Address"
+          placeholder="NFT Contract Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
 
       <TextInput
         label="Token ID"

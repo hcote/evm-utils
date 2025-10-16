@@ -136,19 +136,21 @@ export default function Page() {
 
   return (
     <Container>
-      <NetworkSelector
-        selectedNetwork={selectedNetwork}
-        customRpcUrl={customRpcUrl}
-        onNetworkChange={handleNetworkChange}
-        onCustomRpcUrlChange={handleCustomRpcUrlChange}
-      />
+      <div>
+        <NetworkSelector
+          selectedNetwork={selectedNetwork}
+          customRpcUrl={customRpcUrl}
+          onNetworkChange={handleNetworkChange}
+          onCustomRpcUrlChange={handleCustomRpcUrlChange}
+        />
 
-      <TextInput
-        placeholder="Contract Address"
-        value={contractAddress}
-        onChange={(e) => setContractAddress(e.target.value)}
-        label="Contract Address"
-      />
+        <TextInput
+          placeholder="Contract Address"
+          value={contractAddress}
+          onChange={(e) => setContractAddress(e.target.value)}
+          label="Contract Address"
+        />
+      </div>
 
       <DropdownMenu
         selected={abiOption}

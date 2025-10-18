@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "NFT Metadata",
-  description: "Fetch and display metadata for any ERC-721 token",
+  description: "Fetch ERC-721 NFT token metadata",
 };
 
 interface LayoutProps {

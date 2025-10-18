@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contract Reader",
-  description: "Read data from any Ethereum smart contract",
+  description: "Query ethereum smart contract data",
 };
 
 interface LayoutProps {

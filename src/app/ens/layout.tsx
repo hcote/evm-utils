@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "ENS Lookup",
-  description: "Resolve Ethereum Name Service domains to addresses",
+  description: "ENS ethereum name service lookup",
 };
 
 interface LayoutProps {

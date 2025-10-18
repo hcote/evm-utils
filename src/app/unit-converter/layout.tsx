@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "ETH Unit Converter",
-  description: "Convert between Wei, Gwei, and ETH units",
+  description: "Eth unit converter",
 };
 
 interface LayoutProps {

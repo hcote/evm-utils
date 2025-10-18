@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Transaction Decoder",
-  description: "Decode a raw EVM transaction to view its contents",
+  description: "Decode raw ethereum transaction",
 };
 
 interface LayoutProps {

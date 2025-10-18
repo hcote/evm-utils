@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Data Decoder",
-  description: "Make transaction data human-readable",
+  description: "Decode ethereum transaction data",
 };
 
 interface LayoutProps {

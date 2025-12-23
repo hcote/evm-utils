@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://evmutils.com';
+  const baseUrl = 'https://www.evmutils.com';
 
   const paths = [
     '',
@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/data-decoder',
     '/json-rpc',
     '/contract-reader',
+    // '/fee-explainer',
   ];
 
   return paths.map((path) => ({

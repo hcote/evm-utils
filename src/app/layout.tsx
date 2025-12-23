@@ -14,11 +14,15 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.evmutils.com"),
   title: {
     default: "EVM Utils",
     template: "%s | EVM Utils",
   },
   description: "Helper functions for Ethereum developers",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 interface RootLayoutProps {

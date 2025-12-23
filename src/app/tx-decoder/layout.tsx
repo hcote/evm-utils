@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Transaction Decoder",
   description: "Decode raw ethereum transaction",
+  alternates: {
+    canonical: "/tx-decoder",
+  },
 };
 
 interface LayoutProps {

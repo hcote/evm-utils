@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://evmutils.com/sitemap.xml',
+    sitemap: 'https://www.evmutils.com/sitemap.xml',
   }
 }

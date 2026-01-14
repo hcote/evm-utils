@@ -14,23 +14,25 @@ interface Option {
   >;
 }
 
-interface DropdownMenuProps {
-  selected: Option;
-  options: Option[];
-  onSelect: (...args: any) => void;
+interface DropdownMenuProps<T extends Option = Option> {
+  selected: T;
+  options: T[];
+  onSelect: (option: T) => void;
   buttonClassName?: string;
   dropdownClassName?: string;
   dropdownItemClassName?: string;
+  renderOption?: (option: T) => React.ReactNode;
 }
 
-export default function DropdownMenu({
+export default function DropdownMenu<T extends Option = Option>({
   selected,
   options,
   onSelect,
   buttonClassName = "",
   dropdownClassName = "",
   dropdownItemClassName = "",
-}: DropdownMenuProps) {
+  renderOption,
+}: DropdownMenuProps<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -87,10 +89,16 @@ export default function DropdownMenu({
                         : "hover:bg-[var(--color-btn-hover)]"
                     }`}
                   >
-                    {option.Icon && (
-                      <option.Icon size={16} className="shrink-0" />
+                    {renderOption ? (
+                      renderOption(option)
+                    ) : (
+                      <>
+                        {option.Icon && (
+                          <option.Icon size={16} className="shrink-0" />
+                        )}
+                        {option.name}
+                      </>
                     )}
-                    {option.name}
                   </button>
                 </li>
               );

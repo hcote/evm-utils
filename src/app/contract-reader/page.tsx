@@ -3,7 +3,7 @@
 import erc20Abi from "@/abis/erc20";
 import erc721Abi from "@/abis/erc721";
 import { jsonStringifyBigInt } from "@/utils/jsonStringifyBigInt";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Abi, AbiFunction, isAddress } from "viem";
 import Container from "@/ui/Container";
 import Button from "@/ui/Button";
@@ -14,25 +14,31 @@ import { useNetworkSelection } from "@/hooks/use-network-selection";
 import NetworkSelector from "@/components/NetworkSelector";
 import DropdownMenu from "@/ui/DropdownMenu";
 
+const SAVED_ABIS_KEY = "contract-reader-saved-abis";
+
 const presetAbis: Record<string, Abi> = {
   ERC20: erc20Abi as Abi,
   ERC721: erc721Abi as Abi,
 };
 
-const ABI_OPTIONS = [
-  { id: "ERC20", name: "ABI Type - ERC20" },
-  { id: "ERC721", name: "ABI Type - ERC721" },
-  { id: "Custom", name: "ABI Type - Custom" },
+const BASE_ABI_OPTIONS = [
+  { id: "ERC20", name: "ERC20" },
+  { id: "ERC721", name: "ERC721" },
+  { id: "Custom", name: "Custom" },
 ];
+
+type SavedAbi = { id: string; name: string; abi: Abi };
 
 export default function Page() {
   const [contractAddress, setContractAddress] = useState("");
-  const [abiOption, setAbiOption] = useState(ABI_OPTIONS[0]);
+  const [abiOption, setAbiOption] = useState(BASE_ABI_OPTIONS[0]);
   const [abiJson, setAbiJson] = useState("");
   const [abiFunctions, setAbiFunctions] = useState<AbiFunction[]>([]);
   const [inputs, setInputs] = useState<Record<string, string[]>>({});
   const [results, setResults] = useState<Record<string, any>>({});
   const [error, setError] = useState("");
+  const [savedAbis, setSavedAbis] = useState<SavedAbi[]>([]);
+  const [saveAbiName, setSaveAbiName] = useState("");
 
   const {
     selectedNetwork,
@@ -42,11 +48,58 @@ export default function Page() {
     handleCustomRpcUrlChange,
   } = useNetworkSelection();
 
+  // Load saved ABIs from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SAVED_ABIS_KEY);
+      if (stored) {
+        setSavedAbis(JSON.parse(stored));
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }, []);
+
+  const abiOptions = [
+    ...BASE_ABI_OPTIONS,
+    ...savedAbis.map((s) => ({ id: s.id, name: s.name })),
+  ];
+
+  const handleSaveAbi = () => {
+    try {
+      const parsedAbi = JSON.parse(abiJson);
+      const name = saveAbiName.trim() || `Saved ABI ${savedAbis.length + 1}`;
+      const id = `saved-${Date.now()}`;
+      const newSavedAbi: SavedAbi = { id, name, abi: parsedAbi };
+      const updated = [...savedAbis, newSavedAbi];
+      setSavedAbis(updated);
+      localStorage.setItem(SAVED_ABIS_KEY, JSON.stringify(updated));
+      setSaveAbiName("");
+      setAbiOption({ id, name });
+      setError("");
+    } catch {
+      setError("Invalid ABI JSON");
+    }
+  };
+
+  const handleDeleteSavedAbi = (id: string) => {
+    const updated = savedAbis.filter((s) => s.id !== id);
+    setSavedAbis(updated);
+    localStorage.setItem(SAVED_ABIS_KEY, JSON.stringify(updated));
+    if (abiOption.id === id) {
+      setAbiOption(BASE_ABI_OPTIONS[0]);
+    }
+  };
+
   const handleLoadAbi = () => {
     try {
       let abi: Abi;
       if (abiOption.id === "Custom") {
         abi = JSON.parse(abiJson);
+      } else if (abiOption.id.startsWith("saved-")) {
+        const saved = savedAbis.find((s) => s.id === abiOption.id);
+        if (!saved) throw new Error("Saved ABI not found");
+        abi = saved.abi;
       } else {
         abi = presetAbis[abiOption.id];
       }
@@ -99,7 +152,7 @@ export default function Page() {
       const abi = presetAbis.ERC20;
 
       setContractAddress(usdcAddress);
-      setAbiOption(ABI_OPTIONS[0]);
+      setAbiOption(BASE_ABI_OPTIONS[0]);
 
       const viewFns = abi.filter(
         (fn: any) =>
@@ -154,19 +207,51 @@ export default function Page() {
 
       <DropdownMenu
         selected={abiOption}
-        options={ABI_OPTIONS}
+        options={abiOptions}
         onSelect={setAbiOption}
         buttonClassName="w-full"
         dropdownClassName="w-full"
         dropdownItemClassName="w-full"
+        renderOption={(option) => (
+          <div className="flex items-center justify-between w-full">
+            <span>{option.name}</span>
+            {option.id.startsWith("saved-") && (
+              <span
+                role="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteSavedAbi(option.id);
+                }}
+                className="ml-2 text-xs text-red-400 hover:text-red-300 cursor-pointer"
+              >
+                ✕
+              </span>
+            )}
+          </div>
+        )}
       />
 
       {abiOption.id === "Custom" && (
-        <TextArea
-          placeholder="Paste ABI JSON"
-          value={abiJson}
-          onChange={(e) => setAbiJson(e.target.value)}
-        />
+        <div className="space-y-3">
+          <TextArea
+            placeholder="Paste ABI JSON"
+            value={abiJson}
+            onChange={(e) => setAbiJson(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <TextInput
+              placeholder="ABI Name (optional)"
+              value={saveAbiName}
+              onChange={(e) => setSaveAbiName(e.target.value)}
+            />
+            <Button
+              label="Save ABI"
+              onClick={handleSaveAbi}
+              disabled={!abiJson.trim()}
+              variant="inverse"
+            />
+          </div>
+        </div>
       )}
 
       <div className="flex flex-col items-center justify-center gap-4">

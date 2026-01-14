@@ -41,7 +41,7 @@ export default function Dropdown() {
     <DropdownMenu
       selected={currentItem}
       options={NAVIGATION}
-      onSelect={(item) => item.path && router.push(item.path)}
+      onSelect={(item) => "path" in item && router.push(item.path)}
     />
   );
 }
